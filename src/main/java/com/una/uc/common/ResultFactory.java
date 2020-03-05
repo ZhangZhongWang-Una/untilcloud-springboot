@@ -1,16 +1,16 @@
-package com.una.uc.result;
+package com.una.uc.common;
 
 public class ResultFactory {
     public static Result buildSuccessResult(Object data) {
-        return buildResult(ResultCode.SUCCESS, "成功", data);
+        return buildResult(Constant.SUCCESS, "成功", data);
     }
 
     public static Result buildFailResult(String message) {
-        return buildResult(ResultCode.FAIL, message, null);
+        return buildResult(Constant.FAIL, message, null);
     }
 
-    public static Result buildResult(ResultCode resultCode, String message, Object data) {
-        return buildResult(resultCode.code, message, data);
+    public static Result buildResult(Constant constant, String message, Object data) {
+        return buildResult(constant.code, message, data);
     }
 
     public static Result buildResult(int resultCode, String message, Object data) {

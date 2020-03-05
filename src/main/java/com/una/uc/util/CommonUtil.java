@@ -6,7 +6,7 @@ import java.util.Random;
  * @author Una
  * @date 2020/3/5 21:13
  */
-public class StringUtils {
+public class CommonUtil {
     public static String createCode(int count) {
         // String str="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         String str = "0123456789";

@@ -1,4 +1,4 @@
-package com.una.uc.result;
+package com.una.uc.common;
 
 public class Result {
     private int code;

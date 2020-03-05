@@ -33,7 +33,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("/api/login")
                 .excludePathPatterns("/api/register")
                 .excludePathPatterns("/api/verifyVerificationCode")
-                .excludePathPatterns("/api/getVerificationCode")
+//                .excludePathPatterns("/api/getVerificationCode")
                 .excludePathPatterns("/api/logout");
     }
 

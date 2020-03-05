@@ -1,34 +1,39 @@
 package com.una.uc.controller;
 
+import com.una.uc.common.Constant;
 import com.una.uc.entity.User;
-import com.una.uc.result.Result;
-import com.una.uc.result.ResultFactory;
+import com.una.uc.common.Result;
+import com.una.uc.common.ResultFactory;
 import com.una.uc.service.UserService;
-import com.una.uc.util.StringUtils;
+import com.una.uc.util.RedisUtil;
+import com.una.uc.util.CommonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.hibernate.annotations.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
+
+import javax.annotation.Resource;
 
 
 @Controller
 public class LoginController {
     @Autowired
     UserService userService;
-    String verificationCode;
-    long verificationCodeCreateTime;
+    @Resource
+    private RedisUtil redisUtil;
 
     @GetMapping(value = "/api/login")
     @ResponseBody
     public Result login(@RequestParam String account, @RequestParam String password) {
         account = HtmlUtils.htmlEscape(account);
-//        String username = HtmlUtils.htmlEscape(requesetUser.getUsername());
         Subject subject = SecurityUtils.getSubject();
-//        subject.getSession().setTimeout(10000);
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(account, password);
         usernamePasswordToken.setRememberMe(true);
         try {
@@ -69,36 +74,42 @@ public class LoginController {
     @ResponseBody
     public Result getVerificationCode(@RequestParam("phone")String phone,@RequestParam("count")int count) {
         phone = HtmlUtils.htmlEscape(phone);
-        verificationCode = StringUtils.createCode(count);
-        verificationCodeCreateTime = System.currentTimeMillis();
+        String verificationCode;
+        //1. 判断是否缓存该账号验证码
+        Object redisVerificationCode = redisUtil.get(phone + Constant.SMS_Verification_Code);
+        if (!ObjectUtils.isEmpty(redisVerificationCode)) {
+            verificationCode = redisVerificationCode.toString();
+        } else {
+            verificationCode = CommonUtil.createCode(count);
+        }
+        //2.存入redis缓存
+        boolean isSuccess = redisUtil.set(phone + Constant.SMS_Verification_Code, verificationCode, 120);
+        if (true == isSuccess) {
+            //3.发送短信
+            //String isSend = TencentAPI.sendSms(phone, code);
+            return ResultFactory.buildSuccessResult(verificationCode);
+        } else {
+            String message = "失败";
+            return ResultFactory.buildFailResult(message);
+        }
 
-        return ResultFactory.buildSuccessResult(verificationCode);
-//        String temp = TencentAPI.sendSms(phone, code);
-//        if ("失败".equals(temp)){
-//            return ResultFactory.buildFailResult(temp);
-//        } else {
-//            String message = "验证码发送成功";
-//            return ResultFactory.buildSuccessResult(message);
-//        }
     }
 
     @GetMapping(value = "api/verifyVerificationCode")
     @ResponseBody
-    public Result verifyVerificationCode(@RequestParam("verificationCode")String requestVerificationCode) {
+    public Result verifyVerificationCode(@RequestParam("phone")String phone,@RequestParam("verificationCode")String requestVerificationCode) {
+        phone = HtmlUtils.htmlEscape(phone);
         requestVerificationCode = HtmlUtils.htmlEscape(requestVerificationCode);
-        if (null == verificationCode) {
-            String message = "请获取验证码";
-            return ResultFactory.buildFailResult(message);
-        }else if (((System.currentTimeMillis() - verificationCodeCreateTime) / 1000) > 120 ){
-            String message = "验证码超时";
-            return ResultFactory.buildFailResult(message);
-        }else if (!verificationCode.equals(requestVerificationCode)) {
-            String message = "验证码错误";
-            return ResultFactory.buildFailResult(message);
-        } else {
+        Object redisVerificationCode = redisUtil.get(phone + Constant.SMS_Verification_Code);
+        if (!ObjectUtils.isEmpty(redisVerificationCode) && redisVerificationCode.equals(requestVerificationCode)) {
             String message = "验证成功";
             return ResultFactory.buildSuccessResult(message);
+        } else {
+            String message = "验证码错误或超时";
+            return ResultFactory.buildFailResult(message);
         }
     }
+
+
 
 }
