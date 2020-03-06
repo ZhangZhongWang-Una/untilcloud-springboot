@@ -12,13 +12,10 @@ import com.una.uc.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.hibernate.annotations.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
@@ -34,7 +31,7 @@ public class LoginController {
 
     @GetMapping(value = "/api/login")
     @ResponseBody
-    public Result login(@RequestParam String account, @RequestParam String password) {
+    public Result login(@RequestParam("account") String account, @RequestParam("password") String password) {
         account = HtmlUtils.htmlEscape(account);
         Subject subject = SecurityUtils.getSubject();
         UserToken token = new UserToken(LoginType.USER_PASSWORD, account, password);
@@ -50,7 +47,7 @@ public class LoginController {
 
     @GetMapping(value = "/api/phoneLogin")
     @ResponseBody
-    public Result phoneLogin(@RequestParam String phone, @RequestParam String requestVerificationCode) {
+    public Result phoneLogin(@RequestParam("phone") String phone, @RequestParam("verificationCode") String requestVerificationCode) {
         phone = HtmlUtils.htmlEscape(phone);
         requestVerificationCode = HtmlUtils.htmlEscape(requestVerificationCode);
         Subject subject = SecurityUtils.getSubject();
