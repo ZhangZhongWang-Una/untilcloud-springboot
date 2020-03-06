@@ -31,9 +31,11 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/index.html")
                 .excludePathPatterns("/api/login")
+                .excludePathPatterns("/api/phoneLogin")
                 .excludePathPatterns("/api/register")
+                .excludePathPatterns("/api/resetPassword")
                 .excludePathPatterns("/api/verifyVerificationCode")
-//                .excludePathPatterns("/api/getVerificationCode")
+                .excludePathPatterns("/api/getVerificationCode")
                 .excludePathPatterns("/api/logout");
     }
 

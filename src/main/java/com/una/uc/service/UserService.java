@@ -6,6 +6,7 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
 @Service
@@ -93,5 +94,34 @@ public class UserService {
         return message;
     }
 
+    public String resetPassword(User user){
+        String phone = user.getPhone();
+        String password = user.getPassword();
+
+        phone = HtmlUtils.htmlEscape(phone);
+        if (StringUtils.isEmpty(phone)) {
+            String message = "手机号为空，重置失败";
+            return message;
+        }
+        if (StringUtils.isEmpty(password)) {
+            String message = "密码为空，重置失败";
+            return message;
+        }
+        User exist = getByPhone(phone);
+        if (null == exist) {
+            String message = "手机号未注册，请先注册";
+            return message;
+        }
+        // 默认生成 16 位盐
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        int times = 2;
+        String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
+
+        userDAO.updatePasswordAndSaltByPhone(phone, encodedPassword, salt);
+        String message = "重置成功";
+
+        return message;
+
+    }
 
 }

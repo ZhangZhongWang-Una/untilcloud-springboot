@@ -6,7 +6,7 @@ public enum Constant {
     UNAUTHORIZED(401),
     NOT_FOUND(404),
     INTERNAL_SERVER_ERROR(500),
-    // 短信登陆验证码
+    // 短信验证码
     SMS_Verification_Code(801);
 
     public int code;

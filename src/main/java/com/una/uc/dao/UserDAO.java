@@ -23,7 +23,7 @@ public interface UserDAO extends JpaRepository<User,Integer> {
     // hql
     @Modifying
     @Transactional
-    @Query("update User as u set u.password = ?1 where u.phone=?2")
-    int updatePasswordByPhone(String password,String phone);
+    @Query("update User as u set u.password = ?2 , u.salt = ?3 where u.phone=?1")
+    int updatePasswordAndSaltByPhone(String phone, String encodedPassword, String salt);
 
 }
