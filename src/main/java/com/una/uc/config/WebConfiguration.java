@@ -1,10 +1,8 @@
 package com.una.uc.config;
 
-import com.una.uc.interceptor.LoginInterceptor;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -20,23 +18,19 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .maxAge(3600); //maxAge(3600)表明在3600秒内，不需要再发送预检验请求，可以缓存该结果
     }
 
-    @Bean
-    public LoginInterceptor getLoginIntercepter() {
-        return new LoginInterceptor();
-    }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getLoginIntercepter())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/index.html")
-                .excludePathPatterns("/api/login")
-                .excludePathPatterns("/api/phoneLogin")
-                .excludePathPatterns("/api/register")
-                .excludePathPatterns("/api/resetPassword")
-                .excludePathPatterns("/api/verifyVerificationCode")
-                .excludePathPatterns("/api/getVerificationCode")
-                .excludePathPatterns("/api/logout");
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(getLoginIntercepter())
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/index.html")
+//                .excludePathPatterns("/api/login")
+//                .excludePathPatterns("/api/phoneLogin")
+//                .excludePathPatterns("/api/register")
+//                .excludePathPatterns("/api/resetPassword")
+//                .excludePathPatterns("/api/verifyVerificationCode")
+//                .excludePathPatterns("/api/getVerificationCode")
+//                .excludePathPatterns("/api/logout");
+//    }
 
 }

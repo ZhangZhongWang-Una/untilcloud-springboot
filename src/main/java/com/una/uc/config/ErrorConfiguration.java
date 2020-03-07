@@ -1,13 +1,17 @@
 package com.una.uc.config;
 
-import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;
+import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistry;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author Una
+ * @date 2020/3/7 1:00
+ */
 @Component
-public class ErrorConfig implements ErrorPageRegistrar {
+public class ErrorConfiguration implements ErrorPageRegistrar {
 
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {

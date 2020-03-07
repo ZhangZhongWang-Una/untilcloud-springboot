@@ -1,5 +1,6 @@
 package com.una.uc.config;
 
+import com.una.uc.filter.URLPathMatchingFilter;
 import com.una.uc.realm.*;
 import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
 import org.apache.shiro.codec.Base64;
@@ -13,7 +14,6 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
-import org.crazycake.shiro.IRedisManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
@@ -21,8 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.Filter;
+
+import java.util.*;
 
 @Configuration
 public class ShiroConfiguration {
@@ -44,35 +45,35 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        // 没有登陆的用户只能访问登陆页面，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
+        // shiroFilterFactoryBean.setLoginUrl("/common/unauth");
+        // 登录成功后要跳转的链接
+        // shiroFilterFactoryBean.setSuccessUrl("/auth/index");
+        // 未授权界面;
+        // shiroFilterFactoryBean.setUnauthorizedUrl("common/unauth");
+        // 权限控制map
+        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
+        // 自定义过滤器设置
+        // 1.
+        Map<String, Filter> customizedFilter = new HashMap<>();
+        // 2.命名，需在设置过滤路径前
+        customizedFilter.put("url", getURLPathMatchingFilter());
+        // 公共请求
+        filterChainDefinitionMap.put("/common/**", "anon");
+        // 静态资源 表示可以匿名访问
+        // filterChainDefinitionMap.put("/static/**", "anon");
+        filterChainDefinitionMap.put("/api/menu", "url");
+        filterChainDefinitionMap.put("/api/admin/**", "authc");
+        // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
+        filterChainDefinitionMap.put("/api/admin/**", "url");
+        // 4.启用
+        shiroFilterFactoryBean.setFilters(customizedFilter);
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
-//        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-//        shiroFilterFactoryBean.setSecurityManager(securityManager);
-//        // 没有登陆的用户只能访问登陆页面，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-//        shiroFilterFactoryBean.setLoginUrl("/common/unauth");
-//        // 登录成功后要跳转的链接
-//        //shiroFilterFactoryBean.setSuccessUrl("/auth/index");
-//        // 未授权界面;
-//        shiroFilterFactoryBean.setUnauthorizedUrl("common/unauth");
-//
-//        //自定义拦截器
-//        Map<String, Filter> filtersMap = new LinkedHashMap<String, Filter>();
-//        //限制同一帐号同时在线的个数。
-//        filtersMap.put("kickout", kickoutSessionControlFilter());
-//        shiroFilterFactoryBean.setFilters(filtersMap);
-//
-//        // 权限控制map.
-//        Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-//        // 公共请求
-//        filterChainDefinitionMap.put("/common/**", "anon");
-//        // 静态资源
-//        filterChainDefinitionMap.put("/static/**", "anon");
-//        // 登录方法
-//        filterChainDefinitionMap.put("/admin/login*", "anon"); // 表示可以匿名访问
-//
-//        //此处需要添加一个kickout，上面添加的自定义拦截器才能生效
-//        filterChainDefinitionMap.put("/admin/**", "authc,kickout");// 表示需要认证才可以访问
-//        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-//        return shiroFilterFactoryBean;
+    }
+
+    public URLPathMatchingFilter getURLPathMatchingFilter() {
+        return new URLPathMatchingFilter();
     }
 
     @Bean
@@ -226,6 +227,7 @@ public class ShiroConfiguration {
         cookieRememberMeManager.setCookie(rememberMeCookie());
         cookieRememberMeManager.setCipherKey(Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA=="));
         // cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
+        // cookieRememberMeManager.setCipherKey(Base64.decode("EVANNIGHTLY_WAOU"));
         return cookieRememberMeManager;
     }
 
@@ -235,5 +237,4 @@ public class ShiroConfiguration {
         simpleCookie.setMaxAge(259200);
         return simpleCookie;
     }
-
 }
