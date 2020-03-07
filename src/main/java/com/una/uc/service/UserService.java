@@ -1,6 +1,7 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.UserDAO;
+import com.una.uc.entity.AdminRole;
 import com.una.uc.entity.User;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -9,10 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    AdminRoleService adminRoleService;
 
     public boolean isExist(String username) {
         User user = getByUsername(username);
@@ -123,6 +128,30 @@ public class UserService {
         return message;
     }
 
+    public List<User> list() {
+        List<User> users =  userDAO.list();
+        List<AdminRole> roles;
+        for (User user : users) {
+            roles = adminRoleService.listRolesByUser(user.getUsername());
+            user.setRoles(roles);
+        }
+        return users;
+    }
+
+    public String updateStatus(User user) {
+        String username = HtmlUtils.htmlEscape(user.getUsername());
+        if (StringUtils.isEmpty(username)) {
+            String message= "用户名不能为空";
+            return message;
+        }
+        User userInDB = userDAO.findByUsername(username);
+        if (null == userInDB) {
+            String message = "找不到该用户";
+            return message;
+        }
+        userInDB.setEnabled(user.isEnabled());
+        userDAO.save(userInDB);
+        return "更新成功";
     }
 
 }

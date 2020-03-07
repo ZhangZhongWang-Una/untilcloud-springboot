@@ -2,6 +2,7 @@ package com.una.uc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -12,13 +13,38 @@ public class User {
     @Column(name = "id")
     int id;
 
-    String username;
-    String password;
-    String salt;
-    String role;
-    String phone;
-    String email;
-    boolean enabled;
+    private String username;
+
+    private String password;
+
+    private String salt;
+
+    private String role;
+
+    private String phone;
+
+    private String email;
+
+    private boolean enabled;
+
+    /**
+     * Transient property for storing role owned by current user.
+     */
+    @Transient
+    private List<AdminRole> roles;
+
+    // 默认构造函数
+    public User() {}
+
+    // 用于配合自定义查询的构造函数
+    public User(int id,String username, String role, String phone, String email, boolean enabled) {
+        this.id = id;
+        this.username = username;
+        this.role = role;
+        this.phone = phone;
+        this.email = email;
+        this.enabled = enabled;
+    }
 
     public int getId() {
         return id;
@@ -82,5 +108,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<AdminRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<AdminRole> roles) {
+        this.roles = roles;
     }
 }
