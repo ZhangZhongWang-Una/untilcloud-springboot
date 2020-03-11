@@ -3,6 +3,7 @@ package com.una.uc.service;
 import com.una.uc.dao.UserDAO;
 import com.una.uc.entity.AdminRole;
 import com.una.uc.entity.User;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,25 +41,21 @@ public class UserService {
         return userDAO.getByAccount(account);
     }
 
-    public User get(String username, String password){
-        return userDAO.getByUsernameAndPassword(username, password);
-    }
-
     public void addOrUpdate(User user) {
         userDAO.save(user);
     }
 
     public String register(User user) {
         String username = user.getUsername();
-        String role = user.getRole();
+        String nickname = user.getNickname();
         String phone = user.getPhone();
         String email = user.getEmail();
         String password = user.getPassword();
 
         username = HtmlUtils.htmlEscape(username);
         user.setUsername(username);
-        role = HtmlUtils.htmlEscape(role);
-        user.setRole(role);
+        nickname = HtmlUtils.htmlEscape(nickname);
+        user.setNickname(nickname);
         phone = HtmlUtils.htmlEscape(phone);
         user.setPhone(phone);
         email = HtmlUtils.htmlEscape(email);
@@ -100,21 +97,19 @@ public class UserService {
     }
 
     public String resetPassword(User user){
-        String phone = user.getPhone();
+        String username = user.getUsername();
         String password = user.getPassword();
-
-        phone = HtmlUtils.htmlEscape(phone);
-        if (StringUtils.isEmpty(phone)) {
-            String message = "手机号为空，重置失败";
+        if (StringUtils.isEmpty(username)) {
+            String message = "用户名为空，重置失败";
             return message;
         }
         if (StringUtils.isEmpty(password)) {
             String message = "密码为空，重置失败";
             return message;
         }
-        User exist = getByPhone(phone);
-        if (null == exist) {
-            String message = "手机号未注册，请先注册";
+        User userInDB = userDAO.findByUsername(username);
+        if (null == userInDB) {
+            String message = "未找到该用户，请正确输入用户名";
             return message;
         }
         // 默认生成 16 位盐
@@ -122,7 +117,9 @@ public class UserService {
         int times = 2;
         String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
 
-        userDAO.updatePasswordAndSaltByPhone(phone, encodedPassword, salt);
+        userInDB.setSalt(salt);
+        userInDB.setPassword(encodedPassword);
+        userDAO.save(userInDB);
         String message = "重置成功";
 
         return message;
@@ -152,6 +149,15 @@ public class UserService {
         userInDB.setEnabled(user.isEnabled());
         userDAO.save(userInDB);
         return "更新成功";
+    }
+
+    public User getCurrentUser() {
+        String account = SecurityUtils.getSubject().getPrincipal().toString();
+        User user = getByAccount(account);
+//        List<AdminRole> roles;
+//        roles = adminRoleService.listRolesByUser(user.getUsername());
+//        user.setRoles(roles);
+        return user;
     }
 
 }

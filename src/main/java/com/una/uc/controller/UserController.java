@@ -5,7 +5,7 @@ import com.una.uc.common.ResultFactory;
 import com.una.uc.entity.User;
 import com.una.uc.service.AdminUserRoleService;
 import com.una.uc.service.UserService;
-import com.una.uc.util.SaveUitl;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,15 @@ public class UserController{
     @Autowired
     AdminUserRoleService adminUserRoleService;
 
-    @GetMapping(value = "/api/admin/user")
+    @GetMapping(value = "/api/admin/user/getAll")
     public List<User> listUsers() {
         return userService.list();
+    }
+
+    @GetMapping(value = "/api/admin/user")
+    public User user() {
+        User user =userService.getCurrentUser();
+        return user;
     }
 
     @PutMapping(value = "/api/admin/user/resetPassword")

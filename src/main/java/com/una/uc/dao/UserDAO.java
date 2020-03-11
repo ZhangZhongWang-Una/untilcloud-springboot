@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface UserDAO extends JpaRepository<User,Integer> {
-    User findById(int id);
     // JPA
     User findByUsername(String username);
 
@@ -17,18 +16,16 @@ public interface UserDAO extends JpaRepository<User,Integer> {
 
     User findByEmail(String email);
 
-    User getByUsernameAndPassword(String username,String password);
-
     // sql
     @Query(nativeQuery = true,value = "select * from user where (username = ?1 || phone = ?1 || email = ?1 )")
     User getByAccount(String account);
+
+    @Query(value = "select new User(u.id,u.username,u.nickname,u.phone,u.email,u.enabled) from User u")
+    List<User> list();
 
     // hql
     @Modifying
     @Transactional
     @Query("update User as u set u.password = ?2 , u.salt = ?3 where u.phone=?1")
     int updatePasswordAndSaltByPhone(String phone, String encodedPassword, String salt);
-
-    @Query(value = "select new User(u.id,u.username,u.role,u.phone,u.email,u.enabled) from User u")
-    List<User> list();
 }

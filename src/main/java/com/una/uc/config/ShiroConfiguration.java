@@ -62,7 +62,7 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/common/**", "anon");
         // 静态资源 表示可以匿名访问
         // filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/api/menu", "url");
+        filterChainDefinitionMap.put("/api/menu", "authc");
         filterChainDefinitionMap.put("/api/admin/**", "authc");
         // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
         filterChainDefinitionMap.put("/api/admin/**", "url");
@@ -90,9 +90,9 @@ public class ShiroConfiguration {
         realms.add(userPhoneRealm());
         securityManager.setRealms(realms);
         // 自定义缓存实现 使用redis
-        securityManager.setCacheManager(cacheManager());
+        // securityManager.setCacheManager(cacheManager());
         // 自定义session管理 使用redis
-        securityManager.setSessionManager(sessionManager());
+        // securityManager.setSessionManager(sessionManager());
         return securityManager;
 
     }

@@ -13,18 +13,39 @@ public class User {
     @Column(name = "id")
     int id;
 
+    /**
+     * 用户名
+     */
     private String username;
 
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 盐
+     */
     private String salt;
 
-    private String role;
+    /**
+     * 昵称
+     */
+    private String nickname;
 
+    /**
+     * 手机号
+     */
     private String phone;
 
+    /**
+     * 邮箱
+     */
     private String email;
 
+    /**
+     * 是否使用
+     */
     private boolean enabled;
 
     /**
@@ -37,10 +58,10 @@ public class User {
     public User() {}
 
     // 用于配合自定义查询的构造函数
-    public User(int id,String username, String role, String phone, String email, boolean enabled) {
+    public User(int id,String username, String nickname, String phone, String email, boolean enabled) {
         this.id = id;
         this.username = username;
-        this.role = role;
+        this.nickname = nickname;
         this.phone = phone;
         this.email = email;
         this.enabled = enabled;
@@ -78,12 +99,12 @@ public class User {
         this.salt = salt;
     }
 
-    public String getRole() {
-        return role;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPhone() {
