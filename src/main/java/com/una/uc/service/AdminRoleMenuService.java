@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.xml.ws.Action;
 import java.util.LinkedHashMap;
@@ -36,15 +37,25 @@ public class AdminRoleMenuService {
 
     @Modifying
     @Transactional
-    public void updateRoleMenu(int rid, LinkedHashMap menusIds) {
-        deleteAllByRid(rid);
-        for (Object value : menusIds.values()) {
-            for (int mid : (List<Integer>)value) {
-                AdminRoleMenu rm = new AdminRoleMenu();
-                rm.setRid(rid);
-                rm.setMid(mid);
-                adminRoleMenuDAO.save(rm);
+    public String updateRoleMenu(int rid, LinkedHashMap menusIds) {
+        String message = "";
+        try{
+            deleteAllByRid(rid);
+            for (Object value : menusIds.values()) {
+                for (int mid : (List<Integer>)value) {
+                    AdminRoleMenu rm = new AdminRoleMenu();
+                    rm.setRid(rid);
+                    rm.setMid(mid);
+                    adminRoleMenuDAO.save(rm);
+                }
             }
+            message = "更新成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            message = "参数错误，更新失败";
         }
+
+        return message;
     }
 }

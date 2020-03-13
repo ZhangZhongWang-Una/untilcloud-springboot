@@ -19,10 +19,16 @@ public class UserService {
     UserDAO userDAO;
     @Autowired
     AdminRoleService adminRoleService;
+    @Autowired
+    AdminUserRoleService adminUserRoleService;
 
     public boolean isExist(String username) {
         User user = getByUsername(username);
         return null!=user;
+    }
+
+    public User getById(int id) {
+        return userDAO.findById(id);
     }
 
     public User getByUsername(String username) {
@@ -91,6 +97,7 @@ public class UserService {
         user.setSalt(salt);
         user.setPassword(encodedPassword);
         userDAO.save(user);
+        adminUserRoleService.addUserRole(user.getId() , 8);
         String message = "注册成功";
 
         return message;

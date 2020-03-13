@@ -22,12 +22,12 @@ public class UserController{
     @Autowired
     AdminUserRoleService adminUserRoleService;
 
-    @GetMapping(value = "/api/admin/user/getAll")
+    @GetMapping(value = "/api/admin/user")
     public List<User> listUsers() {
         return userService.list();
     }
 
-    @GetMapping(value = "/api/admin/user")
+    @GetMapping(value = "/api/admin/user/current")
     public User user() {
         User user =userService.getCurrentUser();
         return user;

@@ -2,11 +2,14 @@ package com.una.uc.service;
 
 import com.una.uc.dao.AdminRolePermissionDAO;
 import com.una.uc.entity.AdminPermission;
+import com.una.uc.entity.AdminRoleMenu;
 import com.una.uc.entity.AdminRolePermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -22,7 +25,7 @@ public class AdminRolePermissionService {
         return adminRolePermissionDAO.findAllByRid(rid);
     }
 
-    //    @Modifying
+//    @Modifying
     @Transactional
     public void savePermChanges(int rid, List<AdminPermission> perms) {
         adminRolePermissionDAO.deleteAllByRid(rid);
@@ -32,5 +35,34 @@ public class AdminRolePermissionService {
             rp.setPid(perm.getId());
             adminRolePermissionDAO.save(rp);
         }
+    }
+
+    @Transactional
+    public void deleteAllByRid(int rid){
+        adminRolePermissionDAO.deleteAllByRid(rid);
+    }
+
+    @Transactional
+    public String updateRolePerms(int rid, LinkedHashMap permIds) {
+        String message = "";
+        try{
+            deleteAllByRid(rid);
+            for (Object value : permIds.values()) {
+                for (int pid : (List<Integer>)value) {
+                    AdminRolePermission rp = new AdminRolePermission();
+                    rp.setRid(rid);
+                    rp.setPid(pid);
+                    adminRolePermissionDAO.save(rp);
+                }
+            }
+            message = "更新成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            message = "参数错误，更新失败";
+        }
+
+        return message;
+
     }
 }

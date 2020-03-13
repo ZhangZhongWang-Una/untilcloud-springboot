@@ -63,9 +63,13 @@ public class ShiroConfiguration {
         // 静态资源 表示可以匿名访问
         // filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/api/menu", "authc");
-        filterChainDefinitionMap.put("/api/admin/**", "authc");
-        // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
-        filterChainDefinitionMap.put("/api/admin/**", "url");
+        filterChainDefinitionMap.put("/api/admin/user", "authc,url");
+        filterChainDefinitionMap.put("/api/admin/user/**", "authc");
+        filterChainDefinitionMap.put("/api/admin/role", "authc,url");
+//        filterChainDefinitionMap.put("/api/admin/**", "authc");
+//        // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
+//        filterChainDefinitionMap.put("/api/admin/**", "url");
+
         // 4.启用
         shiroFilterFactoryBean.setFilters(customizedFilter);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

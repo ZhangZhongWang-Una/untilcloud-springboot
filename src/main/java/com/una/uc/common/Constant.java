@@ -1,6 +1,7 @@
 package com.una.uc.common;
 
 public enum Constant {
+    //请求返回
     SUCCESS(200),
     FAIL(400),
     UNAUTHORIZED(401),

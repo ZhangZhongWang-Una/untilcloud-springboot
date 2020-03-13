@@ -2,6 +2,9 @@ package com.una.uc.dao;
 
 import com.una.uc.entity.AdminRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 /**
  * @author Una
@@ -9,4 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface AdminRoleDAO extends JpaRepository<AdminRole, Integer> {
     AdminRole findById(int id);
+
+    AdminRole findByName(String name);
+
+    List<AdminRole> findAllByNameLikeOrNameZhLike(String keyword1, String keyword2);
 }
