@@ -72,7 +72,7 @@ public class AdminRoleService {
         try{
             AdminRole role = adminRoleDAO.findById(id);
             if (null == role){
-                message = "角色ID:"+ id +"不存在，删除失败";
+                message = "角色不存在，删除失败";
             } else {
                 adminRoleDAO.delete(role);
                 adminRolePermissionService.deleteAllByRid(id);

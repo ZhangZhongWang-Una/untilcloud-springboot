@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.util.HtmlUtils;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -52,82 +53,93 @@ public class UserService {
     }
 
     public String register(User user) {
-        String username = user.getUsername();
-        String nickname = user.getNickname();
-        String phone = user.getPhone();
-        String email = user.getEmail();
-        String password = user.getPassword();
+        String message = "";
+        try{
+            String username = user.getUsername();
+            String name = user.getName();
+            String phone = user.getPhone();
+            String email = user.getEmail();
+            String password = user.getPassword();
 
-        username = HtmlUtils.htmlEscape(username);
-        user.setUsername(username);
-        nickname = HtmlUtils.htmlEscape(nickname);
-        user.setNickname(nickname);
-        phone = HtmlUtils.htmlEscape(phone);
-        user.setPhone(phone);
-        email = HtmlUtils.htmlEscape(email);
-        user.setEmail(email);
-        user.setEnabled(true);
+            username = HtmlUtils.htmlEscape(username);
+            user.setUsername(username);
+            name = HtmlUtils.htmlEscape(name);
+            user.setName(name);
+            phone = HtmlUtils.htmlEscape(phone);
+            user.setPhone(phone);
+            email = HtmlUtils.htmlEscape(email);
+            user.setEmail(email);
+            user.setEnabled(true);
 
-        if (username.equals("") || password.equals("")) {
-            String message = "用户名或密码为空，注册失败";
-            return message;
+            if (username.equals("") || password.equals("")) {
+                message = "用户名或密码为空，注册失败";
+                return message;
+            }
+
+            User exist = getByUsername(username);
+            if (null != exist) {
+                message = "用户名已被注册";
+                return message;
+            }
+            exist = getByPhone(phone);
+            if (null != exist) {
+                message = "手机号已被注册";
+                return message;
+            }
+            exist = getByEmail(email);
+            if (null != exist) {
+                message = "邮箱已被注册";
+                return message;
+            }
+
+            // 默认生成 16 位盐
+            String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+            int times = 2;
+            String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
+
+            user.setSalt(salt);
+            user.setPassword(encodedPassword);
+            userDAO.save(user);
+            message = "注册成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数异常，注册失败";
         }
-
-        User exist = getByUsername(username);
-        if (null != exist) {
-            String message = "用户名已被注册";
-            return message;
-        }
-        exist = getByPhone(phone);
-        if (null != exist) {
-            String message = "手机号已被注册";
-            return message;
-        }
-        exist = getByEmail(email);
-        if (null != exist) {
-            String message = "邮箱已被注册";
-            return message;
-        }
-
-        // 默认生成 16 位盐
-        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        int times = 2;
-        String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
-
-        user.setSalt(salt);
-        user.setPassword(encodedPassword);
-        userDAO.save(user);
-        adminUserRoleService.addUserRole(user.getId() , 8);
-        String message = "注册成功";
 
         return message;
     }
 
     public String resetPassword(User user){
-        String username = user.getUsername();
-        String password = user.getPassword();
-        if (StringUtils.isEmpty(username)) {
-            String message = "用户名为空，重置失败";
-            return message;
-        }
-        if (StringUtils.isEmpty(password)) {
-            String message = "密码为空，重置失败";
-            return message;
-        }
-        User userInDB = userDAO.findByUsername(username);
-        if (null == userInDB) {
-            String message = "未找到该用户，请正确输入用户名";
-            return message;
-        }
-        // 默认生成 16 位盐
-        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
-        int times = 2;
-        String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
+        String message = "";
+        try{
+            String username = user.getUsername();
+            String password = user.getPassword();
+            if (StringUtils.isEmpty(username)) {
+                message = "用户名为空，重置失败";
+                return message;
+            }
+            if (StringUtils.isEmpty(password)) {
+                message = "密码为空，重置失败";
+                return message;
+            }
+            User userInDB = userDAO.findByUsername(username);
+            if (null == userInDB) {
+                message = "未找到该用户，请正确输入用户名";
+                return message;
+            }
+            // 默认生成 16 位盐
+            String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+            int times = 2;
+            String encodedPassword = new SimpleHash("md5", password, salt, times).toString();
 
-        userInDB.setSalt(salt);
-        userInDB.setPassword(encodedPassword);
-        userDAO.save(userInDB);
-        String message = "重置成功";
+            userInDB.setSalt(salt);
+            userInDB.setPassword(encodedPassword);
+            userDAO.save(userInDB);
+            message = "重置成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数异常，重置失败";
+        }
 
         return message;
     }
@@ -143,28 +155,101 @@ public class UserService {
     }
 
     public String updateStatus(User user) {
-        String username = HtmlUtils.htmlEscape(user.getUsername());
-        if (StringUtils.isEmpty(username)) {
-            String message= "用户名不能为空";
-            return message;
+        String message = "";
+        try{
+            String username = HtmlUtils.htmlEscape(user.getUsername());
+            if (StringUtils.isEmpty(username)) {
+                message= "用户名不能为空";
+                return message;
+            }
+            User userInDB = userDAO.findByUsername(username);
+            if (null == userInDB) {
+                message = "找不到该用户";
+                return message;
+            }
+            userInDB.setEnabled(user.isEnabled());
+            userDAO.save(userInDB);
+            message =  "更新成功";
+        } catch (Exception e){
+            e.printStackTrace();
+            message = "参数错误，更新失败";
         }
-        User userInDB = userDAO.findByUsername(username);
-        if (null == userInDB) {
-            String message = "找不到该用户";
-            return message;
-        }
-        userInDB.setEnabled(user.isEnabled());
-        userDAO.save(userInDB);
-        return "更新成功";
+
+        return message;
     }
 
     public User getCurrentUser() {
         String account = SecurityUtils.getSubject().getPrincipal().toString();
         User user = getByAccount(account);
-//        List<AdminRole> roles;
-//        roles = adminRoleService.listRolesByUser(user.getUsername());
-//        user.setRoles(roles);
+        List<AdminRole> roles;
+        roles = adminRoleService.listRolesByUser(user.getUsername());
+        user.setRoles(roles);
         return user;
     }
 
+    public String editUser(User user) {
+        String message = "";
+        try {
+            User userInDB = userDAO.findById(user.getId());
+            userInDB.setName(user.getName());
+            userInDB.setPhone(user.getPhone());
+            userInDB.setEmail(user.getEmail());
+
+            userDAO.save(userInDB);
+            adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
+
+            message = "修改成功";
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            message = "参数异常，修改失败";
+        }
+
+        return message;
+    }
+
+    public List<User> search(String keywords) {
+        List<User> us = userDAO.findAllByUsernameLikeOrNameLike('%' + keywords + '%', '%' + keywords + '%');
+        List<AdminRole> roles;
+        for (User u : us) {
+            u.setPassword("");
+            u.setSalt("");
+
+            roles = adminRoleService.listRolesByUser(u.getUsername());
+            u.setRoles(roles);
+        }
+        return us;
+    }
+
+    public String delete(int uid) {
+        String message = "";
+        try{
+            User u = userDAO.findById(uid);
+            if (null == u){
+                message = "用户不存在，删除失败";
+            } else {
+                userDAO.delete(u);
+                adminUserRoleService.deleteByUid(uid);
+
+                message = "删除成功";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，删除失败";
+        }
+
+        return message;
+    }
+
+    public String batchDelete(LinkedHashMap userIds) {
+        String message = "";
+        for (Object value : userIds.values()) {
+            for (int uid :(List<Integer>)value) {
+                message = delete(uid);
+                if (!"删除成功".equals(message)) {
+                    break;
+                }
+            }
+        }
+        return message;
+    }
 }

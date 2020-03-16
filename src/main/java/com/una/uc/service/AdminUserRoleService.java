@@ -102,4 +102,10 @@ public class AdminUserRoleService {
 
         return message;
     }
+
+    @Modifying
+    @Transactional
+    public void deleteByUid(int uid) {
+        adminUserRoleDAO.deleteAllByUid(uid);
+    }
 }
