@@ -5,6 +5,7 @@ import com.una.uc.entity.AdminPermission;
 import com.una.uc.entity.AdminRoleMenu;
 import com.una.uc.entity.AdminRolePermission;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -42,18 +43,17 @@ public class AdminRolePermissionService {
         adminRolePermissionDAO.deleteAllByRid(rid);
     }
 
+    @Modifying
     @Transactional
-    public String updateRolePerms(int rid, LinkedHashMap permIds) {
+    public String updateRolePerm(int rid, List<AdminPermission> perms) {
         String message = "";
         try{
             deleteAllByRid(rid);
-            for (Object value : permIds.values()) {
-                for (int pid : (List<Integer>)value) {
-                    AdminRolePermission rp = new AdminRolePermission();
-                    rp.setRid(rid);
-                    rp.setPid(pid);
-                    adminRolePermissionDAO.save(rp);
-                }
+            for (AdminPermission perm: perms){
+                AdminRolePermission rp = new AdminRolePermission();
+                rp.setRid(rid);
+                rp.setPid(perm.getId());
+                adminRolePermissionDAO.save(rp);
             }
             message = "更新成功";
         } catch (Exception e) {
@@ -63,6 +63,29 @@ public class AdminRolePermissionService {
         }
 
         return message;
-
     }
+
+//    @Transactional
+//    public String updateRolePerms(int rid, LinkedHashMap permIds) {
+//        String message = "";
+//        try{
+//            deleteAllByRid(rid);
+//            for (Object value : permIds.values()) {
+//                for (int pid : (List<Integer>)value) {
+//                    AdminRolePermission rp = new AdminRolePermission();
+//                    rp.setRid(rid);
+//                    rp.setPid(pid);
+//                    adminRolePermissionDAO.save(rp);
+//                }
+//            }
+//            message = "更新成功";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            message = "参数错误，更新失败";
+//        }
+//
+//        return message;
+//
+//    }
 }

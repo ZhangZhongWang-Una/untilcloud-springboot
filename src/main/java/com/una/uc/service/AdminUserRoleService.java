@@ -105,7 +105,31 @@ public class AdminUserRoleService {
 
     @Modifying
     @Transactional
-    public void deleteByUid(int uid) {
+    public void deleteAllByUid(int uid) {
         adminUserRoleDAO.deleteAllByUid(uid);
+    }
+
+    @Modifying
+    @Transactional
+    public String assistRole(int uid, LinkedHashMap roleIds) {
+        String message = "";
+        try{
+            deleteAllByUid(uid);
+            for (Object value : roleIds.values()) {
+                for (int rid: (List<Integer>)value) {
+                    AdminUserRole adminUserRole = new AdminUserRole();
+                    adminUserRole.setUid(uid);
+                    adminUserRole.setRid(rid);
+                    addOrUpdate(adminUserRole);
+                }
+            }
+            message = "分配成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            message = "参数错误，分配失败";
+        }
+
+        return message;
     }
 }

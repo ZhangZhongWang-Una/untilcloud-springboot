@@ -228,7 +228,7 @@ public class UserService {
                 message = "用户不存在，删除失败";
             } else {
                 userDAO.delete(u);
-                adminUserRoleService.deleteByUid(uid);
+                adminUserRoleService.deleteAllByUid(uid);
 
                 message = "删除成功";
             }

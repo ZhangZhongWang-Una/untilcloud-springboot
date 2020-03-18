@@ -1,6 +1,7 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.AdminRoleMenuDAO;
+import com.una.uc.entity.AdminMenu;
 import com.una.uc.entity.AdminRoleMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.xml.ws.Action;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -37,17 +36,15 @@ public class AdminRoleMenuService {
 
     @Modifying
     @Transactional
-    public String updateRoleMenu(int rid, LinkedHashMap menusIds) {
+    public String updateRoleMenu(int rid, List<AdminMenu> menus) {
         String message = "";
         try{
             deleteAllByRid(rid);
-            for (Object value : menusIds.values()) {
-                for (int mid : (List<Integer>)value) {
-                    AdminRoleMenu rm = new AdminRoleMenu();
-                    rm.setRid(rid);
-                    rm.setMid(mid);
-                    adminRoleMenuDAO.save(rm);
-                }
+            for (AdminMenu menu: menus){
+                AdminRoleMenu rm = new AdminRoleMenu();
+                rm.setRid(rid);
+                rm.setMid(menu.getId());
+                adminRoleMenuDAO.save(rm);
             }
             message = "更新成功";
         } catch (Exception e) {
@@ -58,4 +55,28 @@ public class AdminRoleMenuService {
 
         return message;
     }
+
+//    @Modifying
+//    @Transactional
+//    public String updateRoleMenu(int rid, LinkedHashMap menusIds) {
+//        String message = "";
+//        try{
+//            deleteAllByRid(rid);
+//            for (Object value : menusIds.values()) {
+//                for (int mid : (List<Integer>)value) {
+//                    AdminRoleMenu rm = new AdminRoleMenu();
+//                    rm.setRid(rid);
+//                    rm.setMid(mid);
+//                    adminRoleMenuDAO.save(rm);
+//                }
+//            }
+//            message = "更新成功";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//            message = "参数错误，更新失败";
+//        }
+//
+//        return message;
+//    }
 }

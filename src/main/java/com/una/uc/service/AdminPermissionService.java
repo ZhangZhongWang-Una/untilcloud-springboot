@@ -1,16 +1,14 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.AdminPermissionDAO;
-import com.una.uc.entity.AdminPermission;
-import com.una.uc.entity.AdminRole;
-import com.una.uc.entity.AdminRolePermission;
+import com.una.uc.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Una
@@ -33,7 +31,28 @@ public class AdminPermissionService {
         return adminPermissionDAO.findById(id);
     }
 
-    public List<AdminPermission> list() {return adminPermissionDAO.findAll();}
+    public List<AdminPermission> list() {
+        List<AdminPermission> ps = adminPermissionDAO.findAll();
+        handlePerms(ps);
+        return ps;
+    }
+
+    public List<AdminPermission> getAllByParentId(int parentId) {
+        return adminPermissionDAO.findAllByParentId(parentId);}
+
+    public void handlePerms(List<AdminPermission>perms) {
+        for (AdminPermission perm : perms) {
+            perm.setChildren(getAllByParentId(perm.getId()));
+        }
+
+        Iterator<AdminPermission> iterator = perms.iterator();
+        while (iterator.hasNext()) {
+            AdminPermission perm = iterator.next();
+            if (perm.getParentId() != 0) {
+                iterator.remove();
+            }
+        }
+    }
 
     public boolean needFilter(String requestAPI) {
         List<AdminPermission> ps = adminPermissionDAO.findAll();
@@ -52,6 +71,7 @@ public class AdminPermissionService {
         for (AdminRolePermission rp : rps) {
             perms.add(adminPermissionDAO.findById(rp.getPid()));
         }
+        handlePerms(perms);
         return perms;
     }
 
@@ -67,4 +87,61 @@ public class AdminPermissionService {
         }
         return URLs;
     }
+
+    public List<AdminPermission> search(String keywords) {
+        return adminPermissionDAO.findAllByNameLike(keywords);
+    }
+
+    public String add(AdminPermission adminPermission){
+        String message = "";
+        try {
+            adminPermissionDAO.save(adminPermission);
+            message = "添加成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，添加失败";
+        }
+
+        return message;
+    }
+
+    public String delete(Integer pid){
+        String message = "";
+        try {
+            adminPermissionDAO.deleteById(pid);
+            message = "删除成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，删除失败";
+        }
+
+        return message;
+    }
+
+    public String batchDelete(LinkedHashMap permIds) {
+        String message = "";
+        for (Object value : permIds.values()) {
+            for (int pid :(List<Integer>)value) {
+                message = delete(pid);
+                if (!"删除成功".equals(message)) {
+                    break;
+                }
+            }
+        }
+        return message;
+    }
+
+    public String edit(AdminPermission adminPermission){
+        String message = "";
+        try {
+            adminPermissionDAO.save(adminPermission);
+            message = "修改成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，修改失败";
+        }
+
+        return message;
+    }
+
 }

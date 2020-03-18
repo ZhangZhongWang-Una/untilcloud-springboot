@@ -13,6 +13,9 @@ import java.util.List;
 public interface AdminUserRoleDAO extends JpaRepository<AdminUserRole, Integer> {
     AdminUserRole findById(int id);
 
+    @Query(nativeQuery = true, value = "select ur.id, ur.uid, ur.rid " +
+            "from admin_user_role ur left join admin_role r on r.id = ur.rid " +
+            "where r.enabled = '1' and uid = ?1 ")
     List<AdminUserRole> findAllByUid(int Uid);
 
     void deleteAllByUid(int uid);

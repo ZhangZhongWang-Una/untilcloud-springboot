@@ -2,6 +2,7 @@ package com.una.uc.controller;
 
 import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
+import com.una.uc.entity.AdminMenu;
 import com.una.uc.entity.AdminPermission;
 import com.una.uc.entity.AdminRole;
 import com.una.uc.service.*;
@@ -29,13 +30,8 @@ public class RoleController {
     AdminRoleMenuService adminRoleMenuService;
     @Autowired
     AdminUserRoleService adminUserRoleService;
-
-    @GetMapping(value = "/api/admin/role/all")
-    public Result listRoles(){
-        log.info("---------------- 获取所有角色 ----------------------");
-        List<AdminRole> ad = adminRoleService.list();
-        return ResultFactory.buildSuccessResult(ad);
-    }
+    @Autowired
+    AdminMenuService adminMenuService;
 
     @PostMapping(value = "/api/admin/role/add")
     public Result addRole(@RequestBody AdminRole requestRole) {
@@ -47,57 +43,6 @@ public class RoleController {
         } else {
             adminRoleService.addOrUpdate(requestRole);
             String message = "添加角色成功";
-            return ResultFactory.buildSuccessResult(message);
-        }
-    }
-
-    @PutMapping(value = "/api/admin/role/status")
-    public Result updateRoleStatus(@RequestBody AdminRole requestRole) {
-        log.info("---------------- 更新角色状态 ----------------------");
-        String message = adminRoleService.updateRoleStatus(requestRole);
-        if (!"更新成功".equals(message)){
-            return ResultFactory.buildFailResult(message);
-        } else {
-            return ResultFactory.buildSuccessResult(message);
-        }
-    }
-
-    @PutMapping(value = "/api/admin/role/edit")
-    public Result editRole(@RequestBody AdminRole requestRole) {
-        log.info("---------------- 修改角色信息 ----------------------");
-        String message = adminRoleService.edit(requestRole);
-        if (!"修改成功".equals(message)){
-            return ResultFactory.buildFailResult(message);
-        } else {
-            return ResultFactory.buildSuccessResult(message);
-        }
-    }
-
-    @GetMapping(value = "/api/admin/role/perm")
-    public Result listPerms() {
-        log.info("---------------- 获取所有权限 ----------------------");
-        List<AdminPermission> ap = adminPermissionService.list();
-        return ResultFactory.buildSuccessResult(ap);
-    }
-
-    @PutMapping(value = "/api/admin/role/perm")
-    public Result updateRolePerm(@RequestParam int rid, @RequestBody LinkedHashMap permIds) {
-        log.info("---------------- 更新角色权限 ----------------------");
-        String message = adminRolePermissionService.updateRolePerms(rid, permIds);
-        if (!"更新成功".equals(message)){
-            return ResultFactory.buildFailResult(message);
-        } else {
-            return ResultFactory.buildSuccessResult(message);
-        }
-    }
-
-    @PutMapping(value = "/api/admin/role/menu")
-    public Result updateRoleMenu(@RequestParam int rid, @RequestBody LinkedHashMap menusIds) {
-        log.info("---------------- 更新角色菜单 ----------------------");
-        String message = adminRoleMenuService.updateRoleMenu(rid, menusIds);
-        if (!"更新成功".equals(message)){
-            return ResultFactory.buildFailResult(message);
-        } else {
             return ResultFactory.buildSuccessResult(message);
         }
     }
@@ -124,11 +69,40 @@ public class RoleController {
         }
     }
 
+    @PutMapping(value = "/api/admin/role/status")
+    public Result updateRoleStatus(@RequestBody AdminRole requestRole) {
+        log.info("---------------- 更新角色状态 ----------------------");
+        String message = adminRoleService.updateRoleStatus(requestRole);
+        if (!"更新成功".equals(message)){
+            return ResultFactory.buildFailResult(message);
+        } else {
+            return ResultFactory.buildSuccessResult(message);
+        }
+    }
+
+    @PutMapping(value = "/api/admin/role/edit")
+    public Result editRole(@RequestBody AdminRole requestRole) {
+        log.info("---------------- 修改角色信息 ----------------------");
+        String message = adminRoleService.edit(requestRole);
+        if (!"更新成功".equals(message)){
+            return ResultFactory.buildFailResult(message);
+        } else {
+            return ResultFactory.buildSuccessResult(message);
+        }
+    }
+
     @GetMapping(value = "/api/admin/role/search")
     public Result search(@RequestParam String keywords){
         log.info("---------------- 搜索角色 ----------------------");
         List<AdminRole> rs = adminRoleService.search(keywords);
         return ResultFactory.buildSuccessResult(rs);
+    }
+
+    @GetMapping(value = "/api/admin/role/all")
+    public Result listRoles(){
+        log.info("---------------- 获取所有角色 ----------------------");
+        List<AdminRole> ad = adminRoleService.list();
+        return ResultFactory.buildSuccessResult(ad);
     }
 
     @PutMapping(value = "/api/admin/role/user")
@@ -141,4 +115,40 @@ public class RoleController {
             return ResultFactory.buildSuccessResult(message);
         }
     }
+
+    @GetMapping(value = "/api/admin/role/perm")
+    public Result listPerms() {
+        log.info("---------------- 获取所有权限 ----------------------");
+        List<AdminPermission> ps = adminPermissionService.list();
+        return ResultFactory.buildSuccessResult(ps);
+    }
+
+    @GetMapping(value = "/api/admin/role/menu")
+    public Result listMenus() {
+        log.info("---------------- 获取所有菜单 ----------------------");
+        List<AdminMenu> ms= adminMenuService.list();
+        return ResultFactory.buildSuccessResult(ms);
+    }
+
+//    @PutMapping(value = "/api/admin/role/perm")
+//    public Result updateRolePerm(@RequestParam int rid, @RequestBody LinkedHashMap permIds) {
+//        log.info("---------------- 分配权限 ----------------------");
+//        String message = adminRolePermissionService.updateRolePerm(rid, permIds);
+//        if (!"更新成功".equals(message)){
+//            return ResultFactory.buildFailResult(message);
+//        } else {
+//            return ResultFactory.buildSuccessResult(message);
+//        }
+//    }
+//
+//    @PutMapping(value = "/api/admin/role/menu")
+//    public Result updateRoleMenu(@RequestParam int rid, @RequestBody LinkedHashMap menusIds) {
+//        log.info("---------------- 分配菜单 ----------------------");
+//        String message = adminRoleMenuService.updateRoleMenu(rid, menusIds);
+//        if (!"更新成功".equals(message)){
+//            return ResultFactory.buildFailResult(message);
+//        } else {
+//            return ResultFactory.buildSuccessResult(message);
+//        }
+//    }
 }

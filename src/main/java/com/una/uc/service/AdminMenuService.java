@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -77,5 +78,66 @@ public class AdminMenuService {
                 iterator.remove();
             }
         }
+    }
+
+    public List<AdminMenu> list() {
+        List<AdminMenu> menus = adminMenuDAO.findAll();
+        handleMenus(menus);
+        return menus;
+    }
+    public String add(AdminMenu adminMenu){
+        String message = "";
+        try {
+            adminMenuDAO.save(adminMenu);
+            message = "添加成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，添加失败";
+        }
+
+        return message;
+    }
+
+    public String delete(Integer mid){
+        String message = "";
+        try {
+            adminMenuDAO.deleteById(mid);
+            message = "删除成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，删除失败";
+        }
+
+        return message;
+    }
+
+    public String batchDelete(LinkedHashMap menuIds) {
+        String message = "";
+        for (Object value : menuIds.values()) {
+            for (int mid :(List<Integer>)value) {
+                message = delete(mid);
+                if (!"删除成功".equals(message)) {
+                    break;
+                }
+            }
+        }
+        return message;
+    }
+
+    public String edit(AdminMenu adminMenu){
+        String message = "";
+        try {
+            adminMenuDAO.save(adminMenu);
+            message = "修改成功";
+        } catch (Exception e) {
+            e.printStackTrace();
+            message = "参数错误，修改失败";
+        }
+
+        return message;
+    }
+
+    public List<AdminMenu> search(String keywords) {
+        return adminMenuDAO.findAllByNameZhLike(keywords);
     }
 }

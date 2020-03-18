@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.PathMatchingFilter;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.Set;
 
 /**
@@ -45,6 +47,19 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
 
         if (!subject.isAuthenticated() && ! subject.isRemembered()) {
             log.info("---------------- 需要登陆 ----------------");
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json; charset=utf-8");
+            JSONObject res = new JSONObject();
+            res.put("code","401");
+            res.put("message","需要登录");
+            res.put("data", null);
+            PrintWriter out = null ;
+            out = response.getWriter();
+            out.write(res.toString());
+            out.flush();
+            out.close();
+
             return false;
         }
 
@@ -71,6 +86,18 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
                 return true;
             } else {
                 log.info("---------------- 当前用户没有访问接口： "+ requestAPI + " 的权限----------------");
+                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("application/json; charset=utf-8");
+                JSONObject res = new JSONObject();
+                res.put("code","401");
+                res.put("message","没有权限");
+                res.put("data", null);
+                PrintWriter out = null ;
+                out = response.getWriter();
+                out.write(res.toString());
+                out.flush();
+                out.close();
                 return false;
             }
         }

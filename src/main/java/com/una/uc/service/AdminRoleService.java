@@ -103,6 +103,8 @@ public class AdminRoleService {
     public String edit(AdminRole requestRole){
         String message = "";
         try {
+            List<AdminMenu> menus = requestRole.getMenus();
+            List<AdminPermission> perms = requestRole.getPerms();
             AdminRole adminRoleInDB = findById(requestRole.getId());
             if (null == adminRoleInDB) {
                 message = "该角色不存在";
@@ -111,12 +113,12 @@ public class AdminRoleService {
             adminRoleInDB = findByName(requestRole.getName());
             if (adminRoleInDB == null) {
                 addOrUpdate(requestRole);
-                message = "修改成功";
+                message = editRoleMenuAndPerm(requestRole.getId(), menus, perms);
             } else if (adminRoleInDB.getName().equals(requestRole.getName()) && adminRoleInDB.getId() != requestRole.getId()){
                 message = "角色" + adminRoleInDB.getName() + "已存在，修改失败";
             } else {
                 addOrUpdate(requestRole);
-                message = "修改成功";
+                message = editRoleMenuAndPerm(requestRole.getId(), menus, perms);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -126,6 +128,13 @@ public class AdminRoleService {
         return message;
     }
 
+    public String editRoleMenuAndPerm(int rid,List<AdminMenu> menus, List<AdminPermission>perms) {
+        String message = adminRoleMenuService.updateRoleMenu(rid, menus);
+        if (!"更新成功".equals(message))
+            return message;
+        message = adminRolePermissionService.updateRolePerm(rid, perms);
+        return message;
+    }
     public String updateRoleStatus(AdminRole requestRole){
         String message = "";
         try{

@@ -3,6 +3,7 @@ package com.una.uc.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author Una
@@ -31,6 +32,17 @@ public class AdminPermission {
      * The path which triggers permission check.
      */
     private String url;
+
+    /**
+     * Parent menu.
+     */
+    private int parentId;
+
+    /**
+     * Transient property for storing children menus.
+     */
+    @Transient
+    private List<AdminPermission> children;
 
     public int getId() {
         return id;
@@ -62,5 +74,21 @@ public class AdminPermission {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(int parentId) {
+        this.parentId = parentId;
+    }
+
+    public List<AdminPermission> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<AdminPermission> children) {
+        this.children = children;
     }
 }

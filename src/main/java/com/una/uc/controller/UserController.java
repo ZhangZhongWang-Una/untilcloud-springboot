@@ -24,24 +24,43 @@ public class UserController{
     @Autowired
     AdminUserRoleService adminUserRoleService;
 
-    @GetMapping(value = "/api/admin/user/all")
-    public List<User> listUsers() {
-        log.info("---------------- 获取所有用户 ----------------------");
-        return userService.list();
+    @PostMapping(value = "/api/admin/user/add")
+    public Result addUser(@RequestBody User user) {
+        log.info("---------------- 增加用户 ----------------------");
+        String message = userService.register(user);
+        if ("注册成功".equals(message))
+            return ResultFactory.buildSuccessResult(message);
+        else
+            return ResultFactory.buildFailResult(message);
     }
 
-    @GetMapping(value = "/api/admin/user/current")
-    public User user() {
-        log.info("---------------- 获取当前登陆用户 ----------------------");
-        User user =userService.getCurrentUser();
-        return user;
+    @GetMapping(value = "/api/admin/user/delete")
+    public Result deleteUser(@RequestParam int uid) {
+        log.info("---------------- 删除用户 ----------------------");
+        String message = userService.delete(uid);
+        if ("删除成功".equals(message)) {
+            return ResultFactory.buildSuccessResult(message);
+        } else {
+            return ResultFactory.buildFailResult(message);
+        }
     }
 
-    @PutMapping(value = "/api/admin/user/password")
-    public Result resetPassword(@RequestBody User requestUser) {
-        log.info("---------------- 重置密码 ----------------------");
-        String message = userService.resetPassword(requestUser);
-        if ("重置成功".equals(message))
+    @PostMapping(value = "/api/admin/user/delete")
+    public Result batchDeleteUser(@RequestBody LinkedHashMap userIds) {
+        log.info("---------------- 批量删除用户 ----------------------");
+        String message = userService.batchDelete(userIds);
+        if ("删除成功".equals(message)) {
+            return ResultFactory.buildSuccessResult(message);
+        } else {
+            return ResultFactory.buildFailResult(message);
+        }
+    }
+
+    @PutMapping("/api/admin/user/edit")
+    public Result editUser(@RequestBody User requestUser) {
+        log.info("---------------- 修改用户信息 ----------------------");
+        String message = userService.editUser(requestUser);
+        if ("修改成功".equals(message))
             return ResultFactory.buildSuccessResult(message);
         else
             return ResultFactory.buildFailResult(message);
@@ -57,11 +76,11 @@ public class UserController{
             return ResultFactory.buildSuccessResult(message);
     }
 
-    @PutMapping("/api/admin/user/edit")
-    public Result editUser(@RequestBody User requestUser) {
-        log.info("---------------- 修改用户信息 ----------------------");
-        String message = userService.editUser(requestUser);
-        if ("修改成功".equals(message))
+    @PutMapping(value = "/api/admin/user/password")
+    public Result resetPassword(@RequestBody User requestUser) {
+        log.info("---------------- 重置密码 ----------------------");
+        String message = userService.resetPassword(requestUser);
+        if ("重置成功".equals(message))
             return ResultFactory.buildSuccessResult(message);
         else
             return ResultFactory.buildFailResult(message);
@@ -74,35 +93,27 @@ public class UserController{
         return ResultFactory.buildSuccessResult(us);
     }
 
-    @GetMapping(value = "/api/admin/user/delete")
-    public Result deleteRole(@RequestParam int uid) {
-        log.info("---------------- 删除用户 ----------------------");
-        String message = userService.delete(uid);
-        if ("删除成功".equals(message)) {
-            return ResultFactory.buildSuccessResult(message);
-        } else {
-            return ResultFactory.buildFailResult(message);
-        }
+    @GetMapping(value = "/api/admin/user/all")
+    public List<User> listUsers() {
+        log.info("---------------- 获取所有用户 ----------------------");
+        return userService.list();
     }
 
-    @PostMapping(value = "/api/admin/user/delete")
-    public Result batchDeleteRole(@RequestBody LinkedHashMap userIds) {
-        log.info("---------------- 批量删除角色 ----------------------");
-        String message = userService.batchDelete(userIds);
-        if ("删除成功".equals(message)) {
-            return ResultFactory.buildSuccessResult(message);
-        } else {
-            return ResultFactory.buildFailResult(message);
-        }
+    @GetMapping(value = "/api/admin/user/current")
+    public User user() {
+        log.info("---------------- 获取当前登陆用户 ----------------------");
+        User user =userService.getCurrentUser();
+        return user;
     }
 
-    @PostMapping(value = "/api/admin/user/add")
-    public Result add(@RequestBody User user) {
-        log.info("---------------- 增加新用户 ----------------------");
-        String message = userService.register(user);
-        if ("注册成功".equals(message))
-            return ResultFactory.buildSuccessResult(message);
-        else
+    @PutMapping(value = "/api/admin/user/role")
+    public Result assistRole(@RequestParam int uid, @RequestBody LinkedHashMap roleIds) {
+        log.info("---------------- 分配角色 ----------------------");
+        String message = adminUserRoleService.assistRole(uid, roleIds);
+        if (!"分配成功".equals(message)){
             return ResultFactory.buildFailResult(message);
+        } else {
+            return ResultFactory.buildSuccessResult(message);
+        }
     }
 }

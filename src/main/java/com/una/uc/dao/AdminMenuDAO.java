@@ -12,4 +12,8 @@ public interface AdminMenuDAO extends JpaRepository<AdminMenu,Integer> {
     AdminMenu findById(int id);
 
     List<AdminMenu> findAllByParentId(int parentId);
+
+    List<AdminMenu> findAllByNameZhLike(String keyword1);
+
+    void deleteById(Integer id);
 }
