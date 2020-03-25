@@ -84,5 +84,10 @@ public class MenuController{
         return ResultFactory.buildSuccessResult(ms);
     }
 
-
+    @GetMapping(value = "/api/admin/menu/all")
+    public Result all(){
+        log.info("---------------- 获取所有菜单 ----------------------");
+        List<AdminMenu> ms = adminMenuService.all();
+        return ResultFactory.buildSuccessResult(ms);
+    }
 }

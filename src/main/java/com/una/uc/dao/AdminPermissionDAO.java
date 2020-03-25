@@ -2,6 +2,7 @@ package com.una.uc.dao;
 
 import com.una.uc.entity.AdminPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface AdminPermissionDAO extends JpaRepository<AdminPermission, Integ
     List<AdminPermission> findAllByNameLike(String keyword1);
 
     List<AdminPermission> findAllByParentId(int parentId);
+
+    @Query(nativeQuery = true, value = "select * from admin_permission order by parent_id ")
+    List<AdminPermission> findAllOrderByParentId();
 }

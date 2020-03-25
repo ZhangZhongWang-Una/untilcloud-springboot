@@ -144,4 +144,7 @@ public class AdminPermissionService {
         return message;
     }
 
+    public List<AdminPermission> all() {
+        return adminPermissionDAO.findAllOrderByParentId();
+    }
 }

@@ -70,4 +70,11 @@ public class PermController {
         List<AdminPermission> ps = adminPermissionService.search(keywords);
         return ResultFactory.buildSuccessResult(ps);
     }
+
+    @GetMapping(value = "/api/admin/perm/all")
+    public Result all(){
+        log.info("---------------- 获取所有权限 ----------------------");
+        List<AdminPermission> ps = adminPermissionService.all();
+        return ResultFactory.buildSuccessResult(ps);
+    }
 }

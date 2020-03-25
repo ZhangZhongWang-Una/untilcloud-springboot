@@ -140,4 +140,8 @@ public class AdminMenuService {
     public List<AdminMenu> search(String keywords) {
         return adminMenuDAO.findAllByNameZhLike(keywords);
     }
+
+    public List<AdminMenu> all() {
+        return adminMenuDAO.findAllOrderByParentId();
+    }
 }
