@@ -157,12 +157,7 @@ public class UserService {
     public String updateStatus(User user) {
         String message = "";
         try{
-            String username = HtmlUtils.htmlEscape(user.getUsername());
-            if (StringUtils.isEmpty(username)) {
-                message= "用户名不能为空";
-                return message;
-            }
-            User userInDB = userDAO.findByUsername(username);
+            User userInDB = userDAO.findById(user.getId());
             if (null == userInDB) {
                 message = "找不到该用户";
                 return message;

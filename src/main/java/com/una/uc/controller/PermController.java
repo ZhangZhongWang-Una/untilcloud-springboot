@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-public class PermissionController {
+public class PermController {
     @Autowired
     AdminPermissionService adminPermissionService;
 

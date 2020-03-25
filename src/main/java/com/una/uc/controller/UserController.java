@@ -73,7 +73,7 @@ public class UserController{
         if ("更新成功".equals(message))
             return ResultFactory.buildSuccessResult(message);
         else
-            return ResultFactory.buildSuccessResult(message);
+            return ResultFactory.buildFailResult(message);
     }
 
     @PutMapping(value = "/api/admin/user/password")
