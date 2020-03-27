@@ -2,6 +2,7 @@ package com.una.uc.dao;
 
 import com.una.uc.entity.AdminRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -15,4 +16,7 @@ public interface AdminRoleDAO extends JpaRepository<AdminRole, Integer> {
     AdminRole findByName(String name);
 
     List<AdminRole> findAllByNameLikeOrNameZhLike(String keyword1, String keyword2);
+
+    @Query(nativeQuery = true, value = "select * from admin_role where enabled = '1' ")
+    List<AdminRole> findAllByEnabled();
 }

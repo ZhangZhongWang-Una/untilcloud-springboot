@@ -4,7 +4,6 @@ import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
 import com.una.uc.entity.DictionaryInfo;
 import com.una.uc.entity.DictionaryType;
-import com.una.uc.entity.User;
 import com.una.uc.service.DictionaryInfoService;
 import com.una.uc.service.DictionaryTypeService;
 import lombok.extern.slf4j.Slf4j;

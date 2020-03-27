@@ -154,6 +154,16 @@ public class UserService {
         return users;
     }
 
+    public List<User> listIsEnabled() {
+        List<User> users =  userDAO.findAllByEnabled();
+        List<AdminRole> roles;
+        for (User user : users) {
+            roles = adminRoleService.listRolesByUser(user.getUsername());
+            user.setRoles(roles);
+        }
+        return users;
+    }
+
     public String updateStatus(User user) {
         String message = "";
         try{
@@ -186,14 +196,16 @@ public class UserService {
         String message = "";
         try {
             User userInDB = userDAO.findById(user.getId());
+            if (null == userInDB) {
+                message = "找不到该用户，修改失败";
+                return message;
+            }
             userInDB.setName(user.getName());
             userInDB.setPhone(user.getPhone());
             userInDB.setEmail(user.getEmail());
 
-            userDAO.save(userInDB);
-            adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
-
-            message = "修改成功";
+            addOrUpdate(userInDB);
+            message = adminUserRoleService.saveRoleChanges(userInDB.getId(), user.getRoles());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             message = "参数异常，修改失败";

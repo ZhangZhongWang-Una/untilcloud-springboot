@@ -3,7 +3,6 @@ package com.una.uc.service;
 import com.una.uc.dao.AdminUserRoleDAO;
 import com.una.uc.entity.AdminRole;
 import com.una.uc.entity.AdminUserRole;
-import com.una.uc.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -31,23 +30,7 @@ public class AdminUserRoleService {
     public void addOrUpdate(AdminUserRole adminUserRole) {
         adminUserRoleDAO.save(adminUserRole);
     }
-    @Transactional
-    public void saveRoleChanges(int uid, List<AdminRole> roles) {
-        adminUserRoleDAO.deleteAllByUid(uid);
-        for (AdminRole role : roles) {
-            AdminUserRole ur = new AdminUserRole();
-            ur.setUid(uid);
-            ur.setRid(role.getId());
-            adminUserRoleDAO.save(ur);
-        }
-    }
 
-    public void addUserRole(int uid, int rid){
-        AdminUserRole ur = new AdminUserRole();
-        ur.setRid(uid);
-        ur.setRid(rid);
-        adminUserRoleDAO.save(ur);
-    }
 
     public void deleteByRidAndUid(int rid, int uid){
         adminUserRoleDAO.deleteByRidAndUid(rid, uid);
@@ -111,23 +94,21 @@ public class AdminUserRoleService {
 
     @Modifying
     @Transactional
-    public String assistRole(int uid, LinkedHashMap roleIds) {
+    public String saveRoleChanges(int uid, List<AdminRole> roles) {
         String message = "";
         try{
             deleteAllByUid(uid);
-            for (Object value : roleIds.values()) {
-                for (int rid: (List<Integer>)value) {
-                    AdminUserRole adminUserRole = new AdminUserRole();
-                    adminUserRole.setUid(uid);
-                    adminUserRole.setRid(rid);
-                    addOrUpdate(adminUserRole);
-                }
+            for (AdminRole role : roles) {
+                AdminUserRole adminUserRole = new AdminUserRole();
+                adminUserRole.setUid(uid);
+                adminUserRole.setRid(role.getId());
+                addOrUpdate(adminUserRole);
             }
-            message = "分配成功";
+            message = "修改成功";
         } catch (Exception e) {
             e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            message = "参数错误，分配失败";
+            message = "参数错误，修改失败";
         }
 
         return message;

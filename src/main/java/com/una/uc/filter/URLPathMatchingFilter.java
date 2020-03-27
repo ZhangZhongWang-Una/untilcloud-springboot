@@ -51,7 +51,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json; charset=utf-8");
             JSONObject res = new JSONObject();
-            res.put("code","401");
+            res.put("code","403");
             res.put("message","需要登录");
             res.put("data", null);
             PrintWriter out = null ;
@@ -90,7 +90,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
                 response.setCharacterEncoding("UTF-8");
                 response.setContentType("application/json; charset=utf-8");
                 JSONObject res = new JSONObject();
-                res.put("code","401");
+                res.put("code","403");
                 res.put("message","没有权限");
                 res.put("data", null);
                 PrintWriter out = null ;

@@ -3,10 +3,7 @@ package com.una.uc.service;
 import com.una.uc.dao.AdminPermissionDAO;
 import com.una.uc.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.*;
 
@@ -89,7 +86,7 @@ public class AdminPermissionService {
     }
 
     public List<AdminPermission> search(String keywords) {
-        return adminPermissionDAO.findAllByNameLike(keywords);
+        return adminPermissionDAO.search("%" + keywords + "%");
     }
 
     public String add(AdminPermission adminPermission){

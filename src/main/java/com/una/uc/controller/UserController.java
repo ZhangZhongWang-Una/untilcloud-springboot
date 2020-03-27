@@ -2,7 +2,9 @@ package com.una.uc.controller;
 
 import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
+import com.una.uc.entity.AdminRole;
 import com.una.uc.entity.User;
+import com.una.uc.service.AdminRoleService;
 import com.una.uc.service.AdminUserRoleService;
 import com.una.uc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,8 @@ public class UserController{
     UserService userService;
     @Autowired
     AdminUserRoleService adminUserRoleService;
+    @Autowired
+    AdminRoleService adminRoleService;
 
     @PostMapping(value = "/api/admin/user/add")
     public Result addUser(@RequestBody User user) {
@@ -106,14 +110,10 @@ public class UserController{
         return user;
     }
 
-    @PutMapping(value = "/api/admin/user/role")
-    public Result assistRole(@RequestParam int uid, @RequestBody LinkedHashMap roleIds) {
-        log.info("---------------- 分配角色 ----------------------");
-        String message = adminUserRoleService.assistRole(uid, roleIds);
-        if (!"分配成功".equals(message)){
-            return ResultFactory.buildFailResult(message);
-        } else {
-            return ResultFactory.buildSuccessResult(message);
-        }
+    @GetMapping(value = "/api/admin/user/role")
+    public Result getAllRoleIsEnabled() {
+        log.info("---------------- 获取所有角色 ----------------------");
+        List<AdminRole> ad = adminRoleService.listIsEnabled();
+        return ResultFactory.buildSuccessResult(ad);
     }
 }

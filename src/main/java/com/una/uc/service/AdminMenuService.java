@@ -138,7 +138,7 @@ public class AdminMenuService {
     }
 
     public List<AdminMenu> search(String keywords) {
-        return adminMenuDAO.findAllByNameZhLike(keywords);
+        return adminMenuDAO.search("%" + keywords + "%");
     }
 
     public List<AdminMenu> all() {

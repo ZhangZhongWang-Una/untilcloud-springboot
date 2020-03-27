@@ -63,8 +63,17 @@ public class LoginController {
     }
 
     @PostMapping(value = "/api/common/register")
-    public Result register(@RequestBody User user) {
+    public Result register(@RequestBody User user,@RequestParam() String verificationCode) {
         log.info("---------------- 注册新用户 ----------------------");
+        log.info("---------------- 验证验证码 ----------------------");
+        Object redisVerificationCode = redisUtil.get(user.getPhone() + Constant.SMS_Verification_Code.code);
+        if (ObjectUtils.isEmpty(redisVerificationCode)) {
+            String message = "验证码超时,请重新获取";
+            return ResultFactory.buildFailResult(message);
+        } else if (!redisVerificationCode.equals(verificationCode)){
+            String message = "验证码错误";
+            return ResultFactory.buildFailResult(message);
+        }
         String message = userService.register(user);
         if ("注册成功".equals(message))
             return ResultFactory.buildSuccessResult(message);

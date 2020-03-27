@@ -15,7 +15,9 @@ public interface AdminMenuDAO extends JpaRepository<AdminMenu,Integer> {
 
     List<AdminMenu> findAllByParentId(int parentId);
 
-    List<AdminMenu> findAllByNameZhLike(String keyword1);
+    @Query(nativeQuery = true, value = "select * from admin_menu where" +
+            " name like ?1 or path like ?1 or name_zh like ?1 or component like ?1 ")
+    List<AdminMenu> search(String keyword1);
 
     void deleteById(Integer id);
 

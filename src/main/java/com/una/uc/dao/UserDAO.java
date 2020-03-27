@@ -25,6 +25,9 @@ public interface UserDAO extends JpaRepository<User,Integer> {
     @Query(value = "select new User(u.id,u.username,u.name,u.phone,u.email,u.enabled) from User u")
     List<User> list();
 
+    @Query(value = "select new User(u.id,u.username,u.name,u.phone,u.email,u.enabled) from User u where u.enabled = true")
+    List<User> findAllByEnabled();
+
     // hql
     @Modifying
     @Transactional

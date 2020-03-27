@@ -15,7 +15,9 @@ public interface AdminPermissionDAO extends JpaRepository<AdminPermission, Integ
 
     void deleteById(Integer id);
 
-    List<AdminPermission> findAllByNameLike(String keyword1);
+    @Query(nativeQuery = true, value = "select * from admin_permission where" +
+            " name like ?1 or desc_ like ?1 or url like ?1 ")
+    List<AdminPermission> search(String keyword1);
 
     List<AdminPermission> findAllByParentId(int parentId);
 

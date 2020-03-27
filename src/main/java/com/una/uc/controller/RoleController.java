@@ -5,6 +5,7 @@ import com.una.uc.common.ResultFactory;
 import com.una.uc.entity.AdminMenu;
 import com.una.uc.entity.AdminPermission;
 import com.una.uc.entity.AdminRole;
+import com.una.uc.entity.User;
 import com.una.uc.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class RoleController {
     AdminUserRoleService adminUserRoleService;
     @Autowired
     AdminMenuService adminMenuService;
+    @Autowired
+    UserService userService;
 
     @PostMapping(value = "/api/admin/role/add")
     public Result addRole(@RequestBody AdminRole requestRole) {
@@ -130,25 +133,10 @@ public class RoleController {
         return ResultFactory.buildSuccessResult(ms);
     }
 
-//    @PutMapping(value = "/api/admin/role/perm")
-//    public Result updateRolePerm(@RequestParam int rid, @RequestBody LinkedHashMap permIds) {
-//        log.info("---------------- 分配权限 ----------------------");
-//        String message = adminRolePermissionService.updateRolePerm(rid, permIds);
-//        if (!"更新成功".equals(message)){
-//            return ResultFactory.buildFailResult(message);
-//        } else {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//    }
-//
-//    @PutMapping(value = "/api/admin/role/menu")
-//    public Result updateRoleMenu(@RequestParam int rid, @RequestBody LinkedHashMap menusIds) {
-//        log.info("---------------- 分配菜单 ----------------------");
-//        String message = adminRoleMenuService.updateRoleMenu(rid, menusIds);
-//        if (!"更新成功".equals(message)){
-//            return ResultFactory.buildFailResult(message);
-//        } else {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//    }
+    @GetMapping(value = "/api/admin/role/user")
+    public Result listUsers(){
+        log.info("---------------- 获取所有用户 ----------------------");
+        List<User> users = userService.listIsEnabled();
+        return ResultFactory.buildSuccessResult(users);
+    }
 }

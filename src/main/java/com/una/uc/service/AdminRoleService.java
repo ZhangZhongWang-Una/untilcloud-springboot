@@ -45,6 +45,10 @@ public class AdminRoleService {
         return roles;
     }
 
+    public List<AdminRole> listIsEnabled() {
+        return adminRoleDAO.findAllByEnabled();
+    }
+
     public AdminRole findById(int id) {
         return adminRoleDAO.findById(id);
     }
@@ -62,7 +66,9 @@ public class AdminRoleService {
         List<AdminRole> roles = new ArrayList<>();
         List<AdminUserRole> urs = adminUserRoleService.listAllByUid(uid);
         for (AdminUserRole ur: urs) {
-            roles.add(adminRoleDAO.findById(ur.getRid()));
+            AdminRole role = adminRoleDAO.findById(ur.getRid());
+            if (true == role.isEnabled())
+                roles.add(role);
         }
         return roles;
     }
