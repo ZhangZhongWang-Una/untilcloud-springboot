@@ -98,9 +98,10 @@ public class UserController{
     }
 
     @GetMapping(value = "/api/admin/user/all")
-    public List<User> listUsers() {
+    public Result listUsers() {
         log.info("---------------- 获取所有用户 ----------------------");
-        return userService.list();
+        List<User> us = userService.list();
+        return ResultFactory.buildSuccessResult(us);
     }
 
     @GetMapping(value = "/api/admin/user/current")

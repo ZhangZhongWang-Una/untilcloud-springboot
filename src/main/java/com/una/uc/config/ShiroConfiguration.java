@@ -230,19 +230,19 @@ public class ShiroConfiguration {
         return authorizationAttributeSourceAdvisor;
     }
 
-    public CookieRememberMeManager rememberMeManager() {
-        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-        cookieRememberMeManager.setCookie(rememberMeCookie());
-        cookieRememberMeManager.setCipherKey(Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA=="));
-        // cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
-        // cookieRememberMeManager.setCipherKey(Base64.decode("EVANNIGHTLY_WAOU"));
-        return cookieRememberMeManager;
-    }
-
-    @Bean
-    public SimpleCookie rememberMeCookie() {
-        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-        simpleCookie.setMaxAge(259200);
-        return simpleCookie;
-    }
+//    public CookieRememberMeManager rememberMeManager() {
+//        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+//        cookieRememberMeManager.setCookie(rememberMeCookie());
+//        cookieRememberMeManager.setCipherKey(Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA=="));
+//        // cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
+//        // cookieRememberMeManager.setCipherKey(Base64.decode("EVANNIGHTLY_WAOU"));
+//        return cookieRememberMeManager;
+//    }
+//
+//    @Bean
+//    public SimpleCookie rememberMeCookie() {
+//        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+//        simpleCookie.setMaxAge(259200);
+//        return simpleCookie;
+//    }
 }

@@ -59,6 +59,7 @@ public class UserPasswordRealm extends AuthorizingRealm {
         if (user != null) {
             // 用户为禁用状态
             if (!user.isEnabled()) {
+                log.info("---------------- 用户已禁用 ----------------------");
                 throw new DisabledAccountException();
             }
             String passwordInDB = user.getPassword();
@@ -70,6 +71,7 @@ public class UserPasswordRealm extends AuthorizingRealm {
                     getName());
             return authenticationInfo;
         }
+        log.info("---------------- 用户为空 ----------------------");
         throw new UnknownAccountException();
     }
 

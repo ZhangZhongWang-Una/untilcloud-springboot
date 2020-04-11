@@ -2,7 +2,6 @@ package com.una.uc.service;
 
 import com.una.uc.dao.DictionaryInfoDAO;
 import com.una.uc.entity.DictionaryInfo;
-import com.una.uc.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,22 @@ public class DictionaryInfoService {
         return dictionaryInfoDAO.findAll();
     }
 
+    public boolean isExist(DictionaryInfo info) {
+        DictionaryInfo infoInDB = dictionaryInfoDAO.findByValueAndDictionaryType(info.getValue(), info.getDictionaryType().getId());
+        return null!=infoInDB;
+    }
+
     public  String add(DictionaryInfo dictionaryInfo) {
         String message = "";
         try {
+            if (null == dictionaryInfo.getDictionaryType()) {
+                message = "字典类型为空，添加失败";
+                return message;
+            }
+            if (isExist(dictionaryInfo)) {
+                message = "字典明细已存在，添加失败";
+                return message;
+            }
             dictionaryInfo.setUpdateTime(new Date());
 
             addOrUpdate(dictionaryInfo);

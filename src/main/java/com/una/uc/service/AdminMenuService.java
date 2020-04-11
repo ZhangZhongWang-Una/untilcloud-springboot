@@ -29,6 +29,10 @@ public class AdminMenuService {
     @Autowired
     AdminRoleMenuService adminRoleMenuService;
 
+    public AdminMenu findById(int id) {
+        return adminMenuDAO.findById(id);
+    }
+
     public List<AdminMenu> getAllByParentId(int parentId) {return adminMenuDAO.findAllByParentId(parentId);}
 
     public List<AdminMenu> getMenusByCurrentUser() {

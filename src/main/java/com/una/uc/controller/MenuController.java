@@ -22,10 +22,19 @@ public class MenuController{
     AdminMenuService adminMenuService;
 
     @GetMapping("/api/menu")
-    public List<AdminMenu> menu() {
+    public Result menu() {
         log.info("---------------- 获取当前用户菜单 ----------------------");
         List<AdminMenu> menus = adminMenuService.getMenusByCurrentUser();
-        return menus;
+        if (0 != menus.size()) {
+            return ResultFactory.buildSuccessResult(menus);
+        }
+        else {
+            AdminMenu menu = adminMenuService.findById(1);
+            menus.add(menu);
+            menu = adminMenuService.findById(5);
+            menus.add(menu);
+            return ResultFactory.buildSuccessResult(menus);
+        }
     }
 
     @GetMapping("/api/admin/menu/role")

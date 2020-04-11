@@ -1,13 +1,9 @@
 package com.una.uc.service;
 
-import com.una.uc.common.ResultFactory;
 import com.una.uc.dao.AdminRoleDAO;
 import com.una.uc.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.*;
 
@@ -109,22 +105,20 @@ public class AdminRoleService {
     public String edit(AdminRole requestRole){
         String message = "";
         try {
-            List<AdminMenu> menus = requestRole.getMenus();
-            List<AdminPermission> perms = requestRole.getPerms();
             AdminRole adminRoleInDB = findById(requestRole.getId());
             if (null == adminRoleInDB) {
-                message = "该角色不存在";
-                return message;
-            }
-            adminRoleInDB = findByName(requestRole.getName());
-            if (adminRoleInDB == null) {
-                addOrUpdate(requestRole);
-                message = editRoleMenuAndPerm(requestRole.getId(), menus, perms);
-            } else if (adminRoleInDB.getName().equals(requestRole.getName()) && adminRoleInDB.getId() != requestRole.getId()){
-                message = "角色" + adminRoleInDB.getName() + "已存在，修改失败";
+                message = "该角色不存在,修改失败";
             } else {
-                addOrUpdate(requestRole);
-                message = editRoleMenuAndPerm(requestRole.getId(), menus, perms);
+                if (isExist(requestRole)) {
+                    message = "角色已存在，修改失败";
+                } else {
+                    adminRoleInDB.setName(requestRole.getName());
+                    adminRoleInDB.setNameZh(requestRole.getNameZh());
+                    addOrUpdate(adminRoleInDB);
+                    List<AdminMenu> menus = requestRole.getMenus();
+                    List<AdminPermission> perms = requestRole.getPerms();
+                    message = editRoleMenuAndPerm(requestRole.getId(), menus, perms);
+                }
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -163,5 +157,15 @@ public class AdminRoleService {
 
     public List<AdminRole> search(String keywords) {
         return adminRoleDAO.findAllByNameLikeOrNameZhLike('%' + keywords + '%', '%' + keywords + '%');
+    }
+
+    public boolean isExist(AdminRole adminRole) {
+        AdminRole roleInDB = adminRoleDAO.findByName(adminRole.getName());
+        if (null == roleInDB)
+            return false;
+        else if (adminRole.getId() == roleInDB.getId())
+            return false;
+        else
+            return true;
     }
 }

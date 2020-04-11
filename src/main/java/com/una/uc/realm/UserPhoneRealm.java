@@ -64,19 +64,21 @@ public class UserPhoneRealm extends AuthorizingRealm {
         String requestVerificationCode = String.valueOf(token.getPassword());
         Object redisVerificationCode = redisUtil.get(phone + Constant.SMS_Verification_Code.code);
         if (ObjectUtils.isEmpty(redisVerificationCode)) {
-            log.debug("请重新获取验证码，手机号为：{}", phone);
+            log.info("---------------- " + phone + ":请重新获取验证码 ----------------------");
             throw new IncorrectCredentialsException();
         } else if (!redisVerificationCode.toString().equals(requestVerificationCode)) {
-            log.debug("验证码错误，手机号为：{}", phone);
+            log.info("---------------- " + phone + ":验证码错误 ----------------------");
             throw new IncorrectCredentialsException();
         }
 
         User user = userService.getByPhone(phone);
         if(user == null){
+            log.info("---------------- 用户为空 ----------------------");
             throw new UnknownAccountException();
         }
         // 用户为禁用状态
         if(!user.isEnabled()){
+            log.info("---------------- 用户已禁用 ----------------------");
             throw new DisabledAccountException();
         }
         // 完成登录，此处已经不需要做密码校验

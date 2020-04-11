@@ -36,7 +36,7 @@ public class LoginController {
         account = HtmlUtils.htmlEscape(account);
         Subject subject = SecurityUtils.getSubject();
         UserToken token = new UserToken(LoginType.USER_PASSWORD, account, password);
-        token.setRememberMe(true);
+        // token.setRememberMe(true);
         try {
             subject.login(token);
             return ResultFactory.buildSuccessResult(token);
@@ -52,7 +52,7 @@ public class LoginController {
         requestVerificationCode = HtmlUtils.htmlEscape(requestVerificationCode);
         Subject subject = SecurityUtils.getSubject();
         UserToken token = new UserToken(LoginType.USER_PHONE, phone, requestVerificationCode);
-        token.setRememberMe(true);
+        // token.setRememberMe(true);
         try {
             subject.login(token);
             return ResultFactory.buildSuccessResult(token);
@@ -84,6 +84,10 @@ public class LoginController {
     @GetMapping(value = "/api/common/logout")
     public Result logout() {
         Subject subject = SecurityUtils.getSubject();
+        if (null == subject) {
+            String message = "当前无账号登陆，登出失败";
+            return ResultFactory.buildFailResult(message);
+        }
         String account = SecurityUtils.getSubject().getPrincipal().toString();
         subject.logout();
         log.info("---------------- 账号： " + account + " 成功登出 ----------------------");
