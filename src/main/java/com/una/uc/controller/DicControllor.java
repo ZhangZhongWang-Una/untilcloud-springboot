@@ -138,4 +138,20 @@ public class DicControllor {
 
         return ResultFactory.buildSuccessResult(kv);
     }
+
+    @PostMapping("/api/sys/dic/type/adds")
+    public Result addTypeAndInfo(@RequestBody Param param) {
+        log.info("---------------- 增加字典类型和字典明细 ----------------------");
+        String message = dictionaryInfoService.addTypeAndInfos(param.dictionaryType, param.dictionaryInfos);
+        if ("添加成功".equals(message))
+            return ResultFactory.buildSuccessResult(message);
+        else
+            return ResultFactory.buildFailResult(message);
+    }
+
+}
+
+class Param{
+    public DictionaryType dictionaryType;
+    public List<DictionaryInfo> dictionaryInfos;
 }

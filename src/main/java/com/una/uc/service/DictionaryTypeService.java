@@ -98,4 +98,11 @@ public class DictionaryTypeService {
 
         return message;
     }
+
+    public int getIdByCode(int code) {
+        DictionaryType dictionaryType = dictionaryTypeDAO.findByCode(code);
+        if (null != dictionaryType)
+            return dictionaryType.getId();
+        return -1;
+    }
 }

@@ -2,6 +2,7 @@ package com.una.uc.service;
 
 import com.una.uc.dao.DictionaryInfoDAO;
 import com.una.uc.entity.DictionaryInfo;
+import com.una.uc.entity.DictionaryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import java.util.Map;
 public class DictionaryInfoService {
     @Autowired
     DictionaryInfoDAO dictionaryInfoDAO;
+    @Autowired
+    DictionaryTypeService dictionaryTypeService;
 
     public void addOrUpdate(DictionaryInfo dictionaryInfo) {
         dictionaryInfoDAO.save(dictionaryInfo);
@@ -59,7 +62,17 @@ public class DictionaryInfoService {
         return message;
     }
 
-    public  String delete(int dicInfoId) {
+    public String batchAdd(List<DictionaryInfo> dictionaryInfos) {
+        String message = "";
+        for (DictionaryInfo info : dictionaryInfos) {
+            message = add(info);
+            if (!"添加成功".equals(message))
+                break;
+        }
+        return message;
+    }
+
+    public String delete(int dicInfoId) {
         String message = "";
         try {
             dictionaryInfoDAO.deleteById(dicInfoId);
@@ -126,5 +139,24 @@ public class DictionaryInfoService {
 
     public List<Map<String,String>> findAllByTypeCode(int code) {
         return dictionaryInfoDAO.findAllByCode(code);
+    }
+
+    public String addTypeAndInfos(DictionaryType dictionaryType, List<DictionaryInfo> dictionaryInfos) {
+        String message = "";
+        try {
+            dictionaryTypeService.addOrUpdate(dictionaryType);
+            int id = dictionaryTypeService.getIdByCode(dictionaryType.getCode());
+            dictionaryType.setId(id);
+            for (DictionaryInfo dictionaryInfo: dictionaryInfos) {
+                dictionaryInfo.setDictionaryType(dictionaryType);
+                addOrUpdate(dictionaryInfo);
+            }
+
+            message = "添加成功";
+        } catch (Exception e) {
+            message = "参数异常，添加失败";
+        }
+
+        return message;
     }
 }

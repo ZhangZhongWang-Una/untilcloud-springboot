@@ -195,7 +195,17 @@ public class UserService {
     public String editUser(User user) {
         String message = "";
         try {
-            User userInDB = userDAO.findById(user.getId());
+            User userInDB = userDAO.findByPhone(user.getPhone());
+            if (null != userInDB && user.getId() != userInDB.getId()) {
+                message = "用户名已被注册，修改失败";
+                return message;
+            }
+            userInDB = userDAO.findByEmail(user.getEmail());
+            if (null != userInDB && user.getId() != userInDB.getId()) {
+                message = "邮箱已被注册，修改失败";
+                return message;
+            }
+            userInDB = userDAO.findById(user.getId());
             if (null == userInDB) {
                 message = "找不到该用户，修改失败";
                 return message;
