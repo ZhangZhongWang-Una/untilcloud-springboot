@@ -180,4 +180,25 @@ public class LoginController {
             return ResultFactory.buildSuccessResult(message);
         }
     }
+
+    @PostMapping("api/common/register/mobile")
+    public Result registerMobile(@RequestBody User user,
+                                 @RequestParam String verificationCode,
+                                 @RequestParam String role) {
+        log.info("---------------- 移动端注册新用户 ----------------------");
+        log.info("---------------- 验证验证码 ----------------------");
+        Object redisVerificationCode = redisUtil.get(user.getPhone() + Constant.SMS_Verification_Code.code);
+        if (ObjectUtils.isEmpty(redisVerificationCode)) {
+            String message = "验证码超时,请重新获取";
+            return ResultFactory.buildFailResult(message);
+        } else if (!redisVerificationCode.equals(verificationCode)){
+            String message = "验证码错误";
+            return ResultFactory.buildFailResult(message);
+        }
+        String message = userService.registerMobile(user, role);
+        if ("注册成功".equals(message))
+            return ResultFactory.buildSuccessResult(message);
+        else
+            return ResultFactory.buildFailResult(message);
+    }
 }

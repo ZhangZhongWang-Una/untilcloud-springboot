@@ -1,6 +1,7 @@
 package com.una.uc.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author Una
@@ -17,5 +18,9 @@ public class CommonUtil {
             sb.append(ch);
         }
         return sb.toString();
+    }
+
+    public static String creatUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }

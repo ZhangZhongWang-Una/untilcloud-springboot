@@ -2,14 +2,16 @@ package com.una.uc.service;
 
 import com.una.uc.dao.UserDAO;
 import com.una.uc.entity.AdminRole;
+import com.una.uc.entity.AdminUserRole;
 import com.una.uc.entity.User;
+import com.una.uc.entity.UserInfo;
+import com.una.uc.util.CommonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,6 +24,8 @@ public class UserService {
     AdminRoleService adminRoleService;
     @Autowired
     AdminUserRoleService adminUserRoleService;
+    @Autowired
+    UserInfoService userInfoService;
 
     public boolean isExist(String username) {
         User user = getByUsername(username);
@@ -61,13 +65,9 @@ public class UserService {
             String email = user.getEmail();
             String password = user.getPassword();
 
-            username = HtmlUtils.htmlEscape(username);
             user.setUsername(username);
-            name = HtmlUtils.htmlEscape(name);
             user.setName(name);
-            phone = HtmlUtils.htmlEscape(phone);
             user.setPhone(phone);
-            email = HtmlUtils.htmlEscape(email);
             user.setEmail(email);
             user.setEnabled(true);
 
@@ -100,6 +100,9 @@ public class UserService {
             user.setSalt(salt);
             user.setPassword(encodedPassword);
             userDAO.save(user);
+
+            UserInfo userInfo = new UserInfo(username, phone, name);
+            userInfoService.addOrUpdate(userInfo);
             message = "注册成功";
         } catch (Exception e) {
             e.printStackTrace();
@@ -267,6 +270,28 @@ public class UserService {
                 }
             }
         }
+        return message;
+    }
+
+    public String registerMobile(User user, String role) {
+        String uuid = CommonUtil.creatUUID();
+        user.setUsername(uuid);
+        String message = register(user);
+        if ("注册成功".equals(message)) {
+            try {
+                User userInDB = getByUsername(uuid);
+                AdminUserRole adminUserRole = new AdminUserRole();
+                adminUserRole.setUid(userInDB.getId());
+                int rid = adminRoleService.findByName(role).getId();
+                adminUserRole.setRid(rid);
+                adminUserRoleService.addOrUpdate(adminUserRole);
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = "参数异常，注册失败";
+            }
+
+        }
+
         return message;
     }
 }
