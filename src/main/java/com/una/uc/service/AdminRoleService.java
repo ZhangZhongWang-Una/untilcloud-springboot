@@ -69,6 +69,17 @@ public class AdminRoleService {
         return roles;
     }
 
+    public List<AdminRole> listRolesByUser(int uid) {
+        List<AdminRole> roles = new ArrayList<>();
+        List<AdminUserRole> urs = adminUserRoleService.listAllByUid(uid);
+        for (AdminUserRole ur: urs) {
+            AdminRole role = adminRoleDAO.findById(ur.getRid());
+            if (true == role.isEnabled())
+                roles.add(role);
+        }
+        return roles;
+    }
+
     public String delete(int id){
         String message = "";
         try{

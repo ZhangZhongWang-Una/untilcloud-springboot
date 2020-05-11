@@ -1,10 +1,7 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.UserDAO;
-import com.una.uc.entity.AdminRole;
-import com.una.uc.entity.AdminUserRole;
-import com.una.uc.entity.User;
-import com.una.uc.entity.UserInfo;
+import com.una.uc.entity.*;
 import com.una.uc.util.CommonUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -26,6 +24,8 @@ public class UserService {
     AdminUserRoleService adminUserRoleService;
     @Autowired
     UserInfoService userInfoService;
+    @Autowired
+    SysParamService sysParamService;
 
     public boolean isExist(String username) {
         User user = getByUsername(username);
@@ -103,6 +103,8 @@ public class UserService {
 
             UserInfo userInfo = new UserInfo(username, phone, name);
             userInfoService.addOrUpdate(userInfo);
+            SysParam sysParam = new SysParam(new Date(), user);
+            sysParamService.addOrUpdate(sysParam);
             message = "注册成功";
         } catch (Exception e) {
             e.printStackTrace();

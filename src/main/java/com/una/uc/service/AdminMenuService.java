@@ -142,10 +142,14 @@ public class AdminMenuService {
     }
 
     public List<AdminMenu> search(String keywords) {
-        return adminMenuDAO.search("%" + keywords + "%");
+        List<AdminMenu> menus =adminMenuDAO.search("%" + keywords + "%");
+        handleMenus(menus);
+        return menus;
     }
 
     public List<AdminMenu> all() {
-        return adminMenuDAO.findAllOrderByParentId();
+        List<AdminMenu> menus = adminMenuDAO.findAllOrderByParentId();
+        handleMenus(menus);
+        return menus;
     }
 }

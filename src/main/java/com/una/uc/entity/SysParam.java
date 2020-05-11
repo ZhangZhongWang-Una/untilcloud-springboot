@@ -3,8 +3,10 @@ package com.una.uc.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.management.relation.Role;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Una
@@ -20,25 +22,34 @@ public class SysParam {
     private int id;
 
     /**
-     * 系统参数名
+     * signin_experience
      */
-    private String name;
-
-    /**
-     * 系统参数中文说明
-     */
-    @Column(name = "name_zh")
-    private String nameZh;
+    private String key1;
 
     /**
      * 系统参数值
      */
-    private String value;
+    private String value1;
 
     /**
-     * 状态
+     * signin_range
      */
-    private boolean status;
+    private String key2;
+
+    /**
+     * 系统参数值
+     */
+    private String value2;
+
+    /**
+     * class_time
+     */
+    private String key3;
+
+    /**
+     * 系统参数值
+     */
+    private String value3;
 
     /**
      * 更新时间
@@ -47,44 +58,81 @@ public class SysParam {
     @Column(name = "update_time")
     private Date updateTime;
 
+    /**
+     * 用户ID
+     */
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    User user;
+
     public int getId() {
         return id;
+    }
+
+    public SysParam() {
+    }
+
+    public SysParam(Date updateTime, User user) {
+        this.key1 = "signin_experience";
+        this.value1 = "2";
+        this.key2 = "signin_range";
+        this.value2 = "20";
+        this.key3 = "class_time";
+        this.value3 = "45";
+        this.updateTime = updateTime;
+        this.user = user;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getKey1() {
+        return key1;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setKey1(String key1) {
+        this.key1 = key1;
     }
 
-    public String getNameZh() {
-        return nameZh;
+    public String getValue1() {
+        return value1;
     }
 
-    public void setNameZh(String nameZh) {
-        this.nameZh = nameZh;
+    public void setValue1(String value1) {
+        this.value1 = value1;
     }
 
-    public String getValue() {
-        return value;
+    public String getKey2() {
+        return key2;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setKey2(String key2) {
+        this.key2 = key2;
     }
 
-    public boolean isStatus() {
-        return status;
+    public String getValue2() {
+        return value2;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setValue2(String value2) {
+        this.value2 = value2;
+    }
+
+    public String getKey3() {
+        return key3;
+    }
+
+    public void setKey3(String key3) {
+        this.key3 = key3;
+    }
+
+    public String getValue3() {
+        return value3;
+    }
+
+    public void setValue3(String value3) {
+        this.value3 = value3;
     }
 
     public Date getUpdateTime() {
@@ -93,5 +141,29 @@ public class SysParam {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getUserId() {
+        return user.getId();
+    }
+
+    public String getUserUsername() {
+        return user.getUsername();
+    }
+
+    public String getUserName() {
+        return user.getName();
+    }
+
+    public boolean getUserEnabled() {
+        return user.isEnabled();
     }
 }

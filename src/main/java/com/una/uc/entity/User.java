@@ -67,6 +67,14 @@ public class User {
         this.enabled = enabled;
     }
 
+    public User(int id,String username, String name,boolean enabled, List<AdminRole> roles) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.enabled = enabled;
+        this.roles = roles;
+    }
+
     public int getId() {
         return id;
     }
