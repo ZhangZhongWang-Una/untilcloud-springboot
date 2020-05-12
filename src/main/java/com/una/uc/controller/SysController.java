@@ -2,7 +2,9 @@ package com.una.uc.controller;
 
 import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
+import com.una.uc.entity.SchoolInstitution;
 import com.una.uc.entity.SysParam;
+import com.una.uc.service.SchoolInstitutionService;
 import com.una.uc.service.SysParamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,10 @@ import java.util.Map;
 public class SysController {
     @Autowired
     SysParamService sysParamService;
+    @Autowired
+    SchoolInstitutionService schoolInstitutionService;
+
+    /** -------------------------- 系统参数 -------------------------------------- **/
 
     @GetMapping(value = "/api/sys/param/all")
     public Result getAllSysParam() {
@@ -48,51 +54,56 @@ public class SysController {
         return ResultFactory.buildSuccessResult(sysParams);
     }
 
-//    @PutMapping(value = "/api/sys/param/status")
-//    public Result updateSysParamStatus(@RequestBody SysParam sysParam) {
-//        log.info("---------------- 更新系统参数状态 ----------------------");
-//        String message = sysParamService.updateStatus(sysParam);
-//        if ("更新成功".equals(message)) {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//        else {
-//            return ResultFactory.buildFailResult(message);
-//        }
-//    }
-//
-//    @PostMapping(value = "/api/sys/param/add")
-//    public Result addSysParam(@RequestBody SysParam sysParam) {
-//        log.info("---------------- 添加新系统参数 ----------------------");
-//        String message = sysParamService.add(sysParam);
-//        if ("添加成功".equals(message)) {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//        else {
-//            return ResultFactory.buildFailResult(message);
-//        }
-//    }
-//
-//    @GetMapping(value = "/api/sys/param/delete")
-//    public Result deleteSysParam(@RequestParam int spid) {
-//        log.info("---------------- 删除系统参数 ----------------------");
-//        String message = sysParamService.delete(spid);
-//        if ("删除成功".equals(message)) {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//        else {
-//            return ResultFactory.buildFailResult(message);
-//        }
-//    }
-//
-//    @PostMapping(value = "/api/sys/param/delete")
-//    public Result batchDeleteSysParam(@RequestBody LinkedHashMap sysParamIds) {
-//        log.info("---------------- 批量删除系统参数 ----------------------");
-//        String message = sysParamService.batchDelete(sysParamIds);
-//        if ("删除成功".equals(message)) {
-//            return ResultFactory.buildSuccessResult(message);
-//        }
-//        else {
-//            return ResultFactory.buildFailResult(message);
-//        }
-//    }
+    /** -------------------------- 学校机构 -------------------------------------- **/
+
+    @GetMapping(value = "/api/sys/school/all")
+    public Result getAllSchoolInstitution() {
+        log.info("---------------- 获取所有学校机构 ----------------------");
+        List<SchoolInstitution> schoolInstitutions= schoolInstitutionService.list();
+        return ResultFactory.buildSuccessResult(schoolInstitutions);
+    }
+
+    @PostMapping(value = "/api/sys/school/add")
+    public Result addSchoolInstitution(@RequestBody SchoolInstitution sInstitution) {
+        log.info("---------------- 增加学校机构 ----------------------");
+        String message = schoolInstitutionService.add(sInstitution);
+        if ("添加成功".equals(message)) {
+            return ResultFactory.buildSuccessResult(message);
+        }
+        else {
+            return ResultFactory.buildFailResult(message);
+        }
+    }
+
+    @GetMapping(value = "/api/sys/school/delete")
+    public Result deleteSchoolInstitution(@RequestParam int siid) {
+        log.info("---------------- 删除学校机构 ----------------------");
+        String message = schoolInstitutionService.delete(siid);
+        if ("删除成功".equals(message)) {
+            return ResultFactory.buildSuccessResult(message);
+        }
+        else {
+            return ResultFactory.buildFailResult(message);
+        }
+    }
+
+    @PutMapping(value = "/api/sys/school/edit")
+    public Result editSchoolInstitution(@RequestBody SchoolInstitution sInstitution) {
+        log.info("---------------- 修改学校机构 ----------------------");
+        String message = schoolInstitutionService.edit(sInstitution);
+        if ("修改成功".equals(message)) {
+            return ResultFactory.buildSuccessResult(message);
+        }
+        else {
+            return ResultFactory.buildFailResult(message);
+        }
+    }
+
+    @GetMapping(value = "/api/sys/school/search")
+    public Result searchSchoolInstitution(@RequestParam String keywords) {
+        log.info("---------------- 搜索学校机构 ----------------------");
+        List<SchoolInstitution> schoolInstitutions= schoolInstitutionService.search(keywords);
+        return ResultFactory.buildSuccessResult(schoolInstitutions);
+    }
+
 }

@@ -143,7 +143,25 @@ public class AdminMenuService {
 
     public List<AdminMenu> search(String keywords) {
         List<AdminMenu> menus =adminMenuDAO.search("%" + keywords + "%");
-        handleMenus(menus);
+        List<AdminMenu> deleteMenus = new ArrayList<AdminMenu>();
+        for (AdminMenu adminMenu: menus){
+            for (AdminMenu menu: menus) {
+                if (adminMenu.getId() == menu.getParentId()) {
+                    if (null == adminMenu.getChildren()) {
+                        List<AdminMenu> children = new ArrayList<>();
+                        children.add(menu);
+                        adminMenu.setChildren(children);
+                        deleteMenus.add(menu);
+                    } else {
+                        adminMenu.getChildren().add(menu);
+                        deleteMenus.add(menu);
+                    }
+                }
+            }
+        }
+        for (AdminMenu adminMenu:deleteMenus) {
+            menus.remove(adminMenu);
+        }
         return menus;
     }
 

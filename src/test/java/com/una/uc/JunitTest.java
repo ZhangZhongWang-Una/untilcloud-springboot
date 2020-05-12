@@ -1,7 +1,9 @@
 package com.una.uc;
 
+import com.una.uc.entity.SysParam;
 import com.una.uc.entity.User;
 import com.una.uc.entity.UserInfo;
+import com.una.uc.service.SysParamService;
 import com.una.uc.service.UserInfoService;
 import com.una.uc.service.UserService;
 import org.junit.Test;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +26,8 @@ public class JunitTest {
     UserService userService;
     @Autowired
     UserInfoService userInfoService;
+    @Autowired
+    SysParamService sysParamService;
 
     @Test
     public void test(){
@@ -31,12 +36,23 @@ public class JunitTest {
     }
 
     @Test
-    public void userInfoTest() {
+    public void userInfoDataUpdateTest() {
         System.out.println("---------------- 测试开始 ----------------------");
         List<User> users = userService.list();
         for (User user: users){
             UserInfo userInfo = new UserInfo(user.getUsername(), user.getPhone(), user.getName());
             userInfoService.addOrUpdate(userInfo);
+        }
+        System.out.println("---------------- 测试结束 ----------------------");
+    }
+
+    @Test
+    public void sysParamDataUpdateTest() {
+        System.out.println("---------------- 测试开始 ----------------------");
+        List<User> users = userService.list();
+        for (User user: users){
+            SysParam sysParam = new SysParam(new Date(), user);
+            sysParamService.addOrUpdate(sysParam);
         }
         System.out.println("---------------- 测试结束 ----------------------");
     }

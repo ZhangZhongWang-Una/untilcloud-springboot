@@ -63,14 +63,16 @@ public class ShiroConfiguration {
         // 静态资源 表示可以匿名访问
         // filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/api/menu", "authc");
+        filterChainDefinitionMap.put("/api/sys/**", "url");
         filterChainDefinitionMap.put("/api/admin/user/**", "url");
         filterChainDefinitionMap.put("/api/admin/role/**", "url");
         filterChainDefinitionMap.put("/api/admin/menu/**", "url");
         filterChainDefinitionMap.put("/api/admin/perm/**", "url");
-        filterChainDefinitionMap.put("/api/sys/dic/type/**", "url");
-        filterChainDefinitionMap.put("/api/sys/dic/info/**", "url");
-        filterChainDefinitionMap.put("/api/sys/dic/get/**", "url");
-        filterChainDefinitionMap.put("/api/sys/param/**", "url");
+        filterChainDefinitionMap.put("/api/admin/**", "authc");
+//        filterChainDefinitionMap.put("/api/sys/dic/type/**", "url");
+//        filterChainDefinitionMap.put("/api/sys/dic/info/**", "url");
+//        filterChainDefinitionMap.put("/api/sys/dic/get/**", "url");
+//        filterChainDefinitionMap.put("/api/sys/param/**", "url");
 //        filterChainDefinitionMap.put("/api/admin/**", "authc");
 //        // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
 //        filterChainDefinitionMap.put("/api/admin/**", "url");
