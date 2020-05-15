@@ -1,10 +1,12 @@
 package com.una.uc.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,6 +37,13 @@ public class DictionaryType {
      * 状态
      */
     private boolean status;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "update_time")
+    private Date updateTime;
 
     /**
      * 字典信息
@@ -81,5 +90,13 @@ public class DictionaryType {
 
     public void setDictionaryInfos(List<DictionaryInfo> dictionaryInfos) {
         this.dictionaryInfos = dictionaryInfos;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

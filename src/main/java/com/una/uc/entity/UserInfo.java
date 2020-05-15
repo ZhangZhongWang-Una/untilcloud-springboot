@@ -2,10 +2,8 @@ package com.una.uc.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * @author Una
@@ -16,23 +14,24 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 public class UserInfo {
     @Id
-    @Column(name = "username")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    /**
+     * 用户名
+     */
     private String username;
-
-    /**
-     * 学号/工号
-     */
-    private String sno;
-
-    /**
-     * 姓名
-     */
-    private String name;
 
     /**
      * 昵称
      */
     private String nickname;
+
+    /**
+     * 学号/工号
+     */
+    private String ino;
 
     /**
      * 性别
@@ -50,21 +49,59 @@ public class UserInfo {
     private String college;
 
     /**
-     * 手机
+     * 专业
      */
-    private String phone;
+    private String major;
 
     /**
      * 头像
      */
     private String cover;
 
+    /**
+     * 用户ID
+     */
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    User user;
+
+    /**
+     * 角色
+     */
+    @Transient
+    private List<AdminRole> roles;
+
+    /**
+     * 真实姓名
+     */
+    @Transient
+    private String name;
+
     public UserInfo() {}
 
-    public UserInfo(String username, String phone, String name) {
+    public UserInfo(int id, String username, String nickname, String ino, String sex,
+                    String school, String college, String cover) {
+        this.id = id;
         this.username = username;
-        this.phone = phone;
-        this.name = name;
+        this.nickname = nickname;
+        this.ino = ino;
+        this.sex = sex;
+        this.school = school;
+        this.college = college;
+        this.cover = cover;
+    }
+
+    public UserInfo(String username,User user) {
+        this.username = username;
+        this.user = user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -75,20 +112,12 @@ public class UserInfo {
         this.username = username;
     }
 
-    public String getSno() {
-        return sno;
+    public String getIno() {
+        return ino;
     }
 
-    public void setSno(String sno) {
-        this.sno = sno;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setIno(String ino) {
+        this.ino = ino;
     }
 
     public String getNickname() {
@@ -123,19 +152,43 @@ public class UserInfo {
         this.college = college;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getCover() {
         return cover;
     }
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<AdminRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<AdminRole> roles) {
+        this.roles = roles;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMajor() {
+        return major;
+    }
+
+    public void setMajor(String major) {
+        this.major = major;
     }
 }

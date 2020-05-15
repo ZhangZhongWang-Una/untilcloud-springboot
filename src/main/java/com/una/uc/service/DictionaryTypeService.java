@@ -3,8 +3,10 @@ package com.una.uc.service;
 import com.una.uc.dao.DictionaryTypeDAO;
 import com.una.uc.entity.DictionaryType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,11 +23,13 @@ public class DictionaryTypeService {
     }
 
     public void addOrUpdate(DictionaryType dictionaryType) {
+        dictionaryType.setUpdateTime(new Date());
         dictionaryTypeDAO.save(dictionaryType);
     }
 
     public List<DictionaryType> list() {
-        return dictionaryTypeDAO.findAll();
+        Sort sort = Sort.by(Sort.Direction.ASC, "code");
+        return dictionaryTypeDAO.findAll(sort);
     }
 
     public  String add(DictionaryType dictionaryType) {

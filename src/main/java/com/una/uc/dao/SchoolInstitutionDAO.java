@@ -26,6 +26,4 @@ public interface SchoolInstitutionDAO extends JpaRepository<SchoolInstitution,In
     @Transactional
     @Query(nativeQuery = true, value = "delete from school_institution where level like ?1 ")
     int deleteAllByLevelLike(String level);
-
-    List<SchoolInstitution> findAllByLevelLike(String keywords);
 }

@@ -63,6 +63,8 @@ public class ShiroConfiguration {
         // 静态资源 表示可以匿名访问
         // filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/api/menu", "authc");
+        filterChainDefinitionMap.put("/api/file/**", "authc");
+        filterChainDefinitionMap.put("/api/userInfo/**", "authc");
         filterChainDefinitionMap.put("/api/sys/**", "url");
         filterChainDefinitionMap.put("/api/admin/user/**", "url");
         filterChainDefinitionMap.put("/api/admin/role/**", "url");

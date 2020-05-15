@@ -1,9 +1,9 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.SchoolInstitutionDAO;
-import com.una.uc.entity.AdminMenu;
 import com.una.uc.entity.SchoolInstitution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,6 +111,7 @@ public class SchoolInstitutionService {
         for (SchoolInstitution sInstitution: sInstitutions) {
             String[] tag = sInstitution.getLevel().split("\\.");
             idList.addAll(Arrays.asList(tag));
+            idList.add(String.valueOf(sInstitution.getId()));
         }
         LinkedHashSet<String> hashSet =new LinkedHashSet<>(idList);
         while (iterator.hasNext()) {
@@ -123,7 +124,8 @@ public class SchoolInstitutionService {
     }
 
     public List<SchoolInstitution> list() {
-        List<SchoolInstitution> sInstitutions = schoolInstitutionDAO.findAll();
+        Sort sort = Sort.by(Sort.Direction.ASC, "sort");
+        List<SchoolInstitution> sInstitutions = schoolInstitutionDAO.findAll(sort);
 
         for (SchoolInstitution sInstitution: sInstitutions) {
             sInstitution.setChildren(getAllByParentId(sInstitution.getId()));

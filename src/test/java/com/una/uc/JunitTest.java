@@ -40,7 +40,7 @@ public class JunitTest {
         System.out.println("---------------- 测试开始 ----------------------");
         List<User> users = userService.list();
         for (User user: users){
-            UserInfo userInfo = new UserInfo(user.getUsername(), user.getPhone(), user.getName());
+            UserInfo userInfo = new UserInfo(user.getUsername(), user);
             userInfoService.addOrUpdate(userInfo);
         }
         System.out.println("---------------- 测试结束 ----------------------");

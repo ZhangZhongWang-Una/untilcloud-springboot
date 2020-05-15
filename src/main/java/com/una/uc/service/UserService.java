@@ -101,7 +101,7 @@ public class UserService {
             user.setPassword(encodedPassword);
             userDAO.save(user);
 
-            UserInfo userInfo = new UserInfo(username, phone, name);
+            UserInfo userInfo = new UserInfo(username, user);
             userInfoService.addOrUpdate(userInfo);
             SysParam sysParam = new SysParam(new Date(), user);
             sysParamService.addOrUpdate(sysParam);
