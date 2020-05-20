@@ -3,10 +3,8 @@ package com.una.uc.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author Una

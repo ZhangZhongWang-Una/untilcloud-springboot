@@ -23,4 +23,6 @@ public interface AdminMenuDAO extends JpaRepository<AdminMenu,Integer> {
 
     @Query(nativeQuery = true, value = "select * from admin_menu order by parent_id ")
     List<AdminMenu> findAllOrderByParentId();
+
+    void deleteAllByParentId(int parentId);
 }

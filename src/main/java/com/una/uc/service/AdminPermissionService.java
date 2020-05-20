@@ -106,6 +106,7 @@ public class AdminPermissionService {
         String message = "";
         try {
             adminPermissionDAO.deleteById(pid);
+            adminRolePermissionService.deleteAllByPid(pid);
             message = "删除成功";
         } catch (Exception e) {
             e.printStackTrace();

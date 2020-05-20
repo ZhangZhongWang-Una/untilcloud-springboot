@@ -13,4 +13,6 @@ public interface AdminRolePermissionDAO extends JpaRepository<AdminRolePermissio
     List<AdminRolePermission> findAllByRid(int rid);
 
     void deleteAllByRid(int rid);
+
+    void deleteAllByPid(int pid);
 }

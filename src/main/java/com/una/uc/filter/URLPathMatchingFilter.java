@@ -1,7 +1,7 @@
 package com.una.uc.filter;
 
 import com.una.uc.service.AdminPermissionService;
-import com.una.uc.util.SpringContextUtils;
+import com.una.uc.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -38,7 +38,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         }
 
         if (null==adminPermissionService) {
-            adminPermissionService = SpringContextUtils.getContext().getBean(AdminPermissionService.class);
+            adminPermissionService = SpringContextUtil.getContext().getBean(AdminPermissionService.class);
         }
 
         String requestAPI = getPathWithinApplication(request);

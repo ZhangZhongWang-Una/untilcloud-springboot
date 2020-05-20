@@ -38,9 +38,16 @@ public class AdminRolePermissionService {
         }
     }
 
+    @Modifying
     @Transactional
     public void deleteAllByRid(int rid){
         adminRolePermissionDAO.deleteAllByRid(rid);
+    }
+
+    @Modifying
+    @Transactional
+    public void deleteAllByPid(int pid){
+        adminRolePermissionDAO.deleteAllByPid(pid);
     }
 
     @Modifying

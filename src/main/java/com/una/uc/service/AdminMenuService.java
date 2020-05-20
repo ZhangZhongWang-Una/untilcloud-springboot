@@ -106,6 +106,8 @@ public class AdminMenuService {
         String message = "";
         try {
             adminMenuDAO.deleteById(mid);
+            adminMenuDAO.deleteAllByParentId(mid);
+            adminRoleMenuService.deleteAllByMid(mid);
             message = "删除成功";
         } catch (Exception e) {
             e.printStackTrace();

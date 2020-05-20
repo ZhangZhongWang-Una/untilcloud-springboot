@@ -30,6 +30,12 @@ public class AdminRoleMenuService {
         adminRoleMenuDAO.deleteAllByRid(rid);
     }
 
+    @Modifying
+    @Transactional
+    public void deleteAllByMid(int mid) {
+        adminRoleMenuDAO.deleteAllByMid(mid);
+    }
+
     public void save(AdminRoleMenu rm) {
         adminRoleMenuDAO.save(rm);
     }

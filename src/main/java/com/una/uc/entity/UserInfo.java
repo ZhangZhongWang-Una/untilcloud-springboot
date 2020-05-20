@@ -93,6 +93,7 @@ public class UserInfo {
 
     public UserInfo(String username,User user) {
         this.username = username;
+        this.cover = "default.jpg";
         this.user = user;
     }
 
