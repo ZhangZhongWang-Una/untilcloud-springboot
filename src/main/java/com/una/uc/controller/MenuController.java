@@ -5,9 +5,11 @@ import com.una.uc.common.ResultFactory;
 import com.una.uc.entity.AdminMenu;
 import com.una.uc.service.AdminMenuService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -24,11 +26,21 @@ public class MenuController{
     @GetMapping("/api/menu")
     public Result menu() {
         log.info("---------------- 获取当前用户菜单 ----------------------");
-        List<AdminMenu> menus = adminMenuService.getMenusByCurrentUser();
-        if (0 != menus.size()) {
-            return ResultFactory.buildSuccessResult(menus);
+        if (null != SecurityUtils.getSubject().getPrincipal()){
+            List<AdminMenu> menus = adminMenuService.getMenusByCurrentUser();
+            if (0 != menus.size()) {
+                return ResultFactory.buildSuccessResult(menus);
+            }
+            else {
+                AdminMenu menu = adminMenuService.findById(1);
+                menus.add(menu);
+                menu = adminMenuService.findById(5);
+                menus.add(menu);
+                return ResultFactory.buildSuccessResult(menus);
+            }
         }
         else {
+            List<AdminMenu> menus = new ArrayList<>();
             AdminMenu menu = adminMenuService.findById(1);
             menus.add(menu);
             menu = adminMenuService.findById(5);

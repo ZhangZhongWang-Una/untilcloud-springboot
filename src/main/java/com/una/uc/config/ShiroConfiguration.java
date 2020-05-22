@@ -45,16 +45,9 @@ public class ShiroConfiguration {
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        // 没有登陆的用户只能访问登陆页面，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
-        // shiroFilterFactoryBean.setLoginUrl("/common/unauth");
-        // 登录成功后要跳转的链接
-        // shiroFilterFactoryBean.setSuccessUrl("/auth/index");
-        // 未授权界面;
-        // shiroFilterFactoryBean.setUnauthorizedUrl("common/unauth");
         // 权限控制map
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
-        // 自定义过滤器设置
-        // 1.
+        // 1.自定义过滤器设置
         Map<String, Filter> customizedFilter = new HashMap<>();
         // 2.命名，需在设置过滤路径前
         customizedFilter.put("url", getURLPathMatchingFilter());
@@ -62,22 +55,15 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/common/**", "anon");
         // 静态资源 表示可以匿名访问
         // filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/api/menu", "authc");
-        filterChainDefinitionMap.put("/api/file/**", "authc");
-        filterChainDefinitionMap.put("/api/userInfo/**", "authc");
+        // filterChainDefinitionMap.put("/api/menu", "authc");
+        // filterChainDefinitionMap.put("/api/file/**", "authc");
+        // filterChainDefinitionMap.put("/api/userInfo/**", "authc");
         filterChainDefinitionMap.put("/api/sys/**", "url");
         filterChainDefinitionMap.put("/api/admin/user/**", "url");
         filterChainDefinitionMap.put("/api/admin/role/**", "url");
         filterChainDefinitionMap.put("/api/admin/menu/**", "url");
         filterChainDefinitionMap.put("/api/admin/perm/**", "url");
         filterChainDefinitionMap.put("/api/admin/**", "authc");
-//        filterChainDefinitionMap.put("/api/sys/dic/type/**", "url");
-//        filterChainDefinitionMap.put("/api/sys/dic/info/**", "url");
-//        filterChainDefinitionMap.put("/api/sys/dic/get/**", "url");
-//        filterChainDefinitionMap.put("/api/sys/param/**", "url");
-//        filterChainDefinitionMap.put("/api/admin/**", "authc");
-//        // 3.设置过滤路径,对管理接口的访问启用自定义拦截（url 规则），即执行 URLPathMatchingFilter 中定义的过滤方法
-//        filterChainDefinitionMap.put("/api/admin/**", "url");
 
         // 4.启用
         shiroFilterFactoryBean.setFilters(customizedFilter);
@@ -235,19 +221,19 @@ public class ShiroConfiguration {
         return authorizationAttributeSourceAdvisor;
     }
 
-//    public CookieRememberMeManager rememberMeManager() {
-//        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
-//        cookieRememberMeManager.setCookie(rememberMeCookie());
-//        cookieRememberMeManager.setCipherKey(Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA=="));
-//        // cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
-//        // cookieRememberMeManager.setCipherKey(Base64.decode("EVANNIGHTLY_WAOU"));
-//        return cookieRememberMeManager;
-//    }
-//
-//    @Bean
-//    public SimpleCookie rememberMeCookie() {
-//        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
-//        simpleCookie.setMaxAge(259200);
-//        return simpleCookie;
-//    }
+    public CookieRememberMeManager rememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(rememberMeCookie());
+        cookieRememberMeManager.setCipherKey(Base64.decode("6ZmI6I2j5Y+R5aSn5ZOlAA=="));
+        // cookieRememberMeManager.setCipherKey("EVANNIGHTLY_WAOU".getBytes());
+        // cookieRememberMeManager.setCipherKey(Base64.decode("EVANNIGHTLY_WAOU"));
+        return cookieRememberMeManager;
+    }
+
+    @Bean
+    public SimpleCookie rememberMeCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        simpleCookie.setMaxAge(259200);
+        return simpleCookie;
+    }
 }

@@ -44,8 +44,7 @@ public class URLPathMatchingFilter extends PathMatchingFilter {
         String requestAPI = getPathWithinApplication(request);
 
         Subject subject = SecurityUtils.getSubject();
-
-        if (!subject.isAuthenticated()) {
+        if (!subject.isAuthenticated() && !subject.isRemembered()) {
             log.info("---------------- 需要登陆 ----------------");
             ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setCharacterEncoding("UTF-8");

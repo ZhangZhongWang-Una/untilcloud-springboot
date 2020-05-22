@@ -32,13 +32,14 @@ public class LoginController {
     private RedisUtil redisUtil;
 
     @GetMapping(value = "/api/common/login")
-    public Result login(@RequestParam("account") String account, @RequestParam("password") String password) {
+    public Result login(@RequestParam String account, @RequestParam String password,@RequestParam boolean rememberMe) {
         account = HtmlUtils.htmlEscape(account);
         Subject subject = SecurityUtils.getSubject();
         UserToken token = new UserToken(LoginType.USER_PASSWORD, account, password);
-        // token.setRememberMe(true);
+        token.setRememberMe(rememberMe);
         try {
             subject.login(token);
+            token.setPassword(null);
             return ResultFactory.buildSuccessResult(token);
         } catch (AuthenticationException e) {
             String message = "账号或密码错误";
@@ -47,12 +48,12 @@ public class LoginController {
     }
 
     @GetMapping(value = "/api/common/phoneLogin")
-    public Result phoneLogin(@RequestParam("phone") String phone, @RequestParam("verificationCode") String requestVerificationCode) {
+    public Result phoneLogin(@RequestParam String phone, @RequestParam("verificationCode") String requestVerificationCode,@RequestParam boolean rememberMe) {
         phone = HtmlUtils.htmlEscape(phone);
         requestVerificationCode = HtmlUtils.htmlEscape(requestVerificationCode);
         Subject subject = SecurityUtils.getSubject();
         UserToken token = new UserToken(LoginType.USER_PHONE, phone, requestVerificationCode);
-        // token.setRememberMe(true);
+        token.setRememberMe(rememberMe);
         try {
             subject.login(token);
             return ResultFactory.buildSuccessResult(token);
