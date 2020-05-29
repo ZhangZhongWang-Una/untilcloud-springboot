@@ -51,19 +51,19 @@ public class ShiroConfiguration {
         Map<String, Filter> customizedFilter = new HashMap<>();
         // 2.命名，需在设置过滤路径前
         customizedFilter.put("url", getURLPathMatchingFilter());
-        // 公共请求
+        // 3.公共请求
         filterChainDefinitionMap.put("/common/**", "anon");
-        // 静态资源 表示可以匿名访问
-        // filterChainDefinitionMap.put("/static/**", "anon");
         // filterChainDefinitionMap.put("/api/menu", "authc");
-        // filterChainDefinitionMap.put("/api/file/**", "authc");
-        // filterChainDefinitionMap.put("/api/userInfo/**", "authc");
+        filterChainDefinitionMap.put("/api/file/**", "authc");
+        filterChainDefinitionMap.put("/api/userInfo/**", "authc");
         filterChainDefinitionMap.put("/api/sys/**", "url");
-        filterChainDefinitionMap.put("/api/admin/user/**", "url");
-        filterChainDefinitionMap.put("/api/admin/role/**", "url");
-        filterChainDefinitionMap.put("/api/admin/menu/**", "url");
-        filterChainDefinitionMap.put("/api/admin/perm/**", "url");
-        filterChainDefinitionMap.put("/api/admin/**", "authc");
+        filterChainDefinitionMap.put("/api/admin/**", "url");
+        filterChainDefinitionMap.put("/api/class/**", "url");
+//        filterChainDefinitionMap.put("/api/admin/user/**", "url");
+//        filterChainDefinitionMap.put("/api/admin/role/**", "url");
+//        filterChainDefinitionMap.put("/api/admin/menu/**", "url");
+//        filterChainDefinitionMap.put("/api/admin/perm/**", "url");
+//        filterChainDefinitionMap.put("/api/admin/**", "authc");
 
         // 4.启用
         shiroFilterFactoryBean.setFilters(customizedFilter);

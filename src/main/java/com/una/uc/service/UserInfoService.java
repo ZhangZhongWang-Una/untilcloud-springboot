@@ -1,7 +1,6 @@
 package com.una.uc.service;
 
 import com.una.uc.common.Constant;
-import com.una.uc.common.ResultFactory;
 import com.una.uc.dao.UserInfoDAO;
 import com.una.uc.entity.User;
 import com.una.uc.entity.UserInfo;
@@ -12,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Una
@@ -34,12 +34,15 @@ public class UserInfoService {
         return userInfoDAO.findById(id);
     }
 
+    public List<UserInfo> list() {
+        return userInfoDAO.findAll();
+    }
+
     public UserInfo getByCurrentUser() {
         User loginUser = userService.getCurrentUser();
         UserInfo loginUserInfo = userInfoDAO.findByUserId(loginUser.getId());
-        loginUserInfo.setName(loginUser.getName());
         loginUserInfo.setRoles(loginUser.getRoles());
-        loginUserInfo.setCover(Constant.FILE_Photo_Base_Url.string + loginUserInfo.getCover());
+        loginUserInfo.setCover(Constant.FILE_Url_User + loginUserInfo.getCover());
 
         return loginUserInfo;
     }
@@ -61,6 +64,7 @@ public class UserInfoService {
                 userInfoInDB.setSchool(userInfo.getSchool());
                 userInfoInDB.setCollege(userInfo.getCollege());
                 userInfoInDB.setMajor(userInfo.getMajor());
+                userInfoInDB.setName(userInfo.getName());
                 addOrUpdate(userInfoInDB);
 
                 //修改角色
@@ -76,14 +80,12 @@ public class UserInfoService {
     }
 
     public String updateCover(MultipartFile file) throws Exception {
-        File imageFolder = new File(Constant.FILE_Photo_Path.string);
+        File imageFolder = new File(Constant.FILE_Photo_User.string);
         File f = new File(imageFolder, CommonUtil.creatUUID() + file.getOriginalFilename()
                 .substring(file.getOriginalFilename().length() - 4));
-        if (!f.getParentFile().exists())
-            f.getParentFile().mkdirs();
         try {
             file.transferTo(f);
-            String imgURL = Constant.FILE_Photo_Base_Url.string + f.getName();
+            String imgURL = Constant.FILE_Url_User+ f.getName();
 
             int uid = userService.getCurrentUser().getId();
             UserInfo userInfoInDB = userInfoDAO.findAllByUserId(uid);

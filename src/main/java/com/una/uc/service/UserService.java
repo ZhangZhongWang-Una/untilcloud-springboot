@@ -197,6 +197,12 @@ public class UserService {
         return user;
     }
 
+    public int getCurrentUserId() {
+        String account = SecurityUtils.getSubject().getPrincipal().toString();
+        User user = getByAccount(account);
+        return user.getId();
+    }
+
     public String editUser(User user) {
         String message = "";
         try {

@@ -1,17 +1,24 @@
 package com.una.uc;
 
+import com.google.zxing.WriterException;
+import com.una.uc.common.Constant;
 import com.una.uc.entity.SysParam;
 import com.una.uc.entity.User;
 import com.una.uc.entity.UserInfo;
 import com.una.uc.service.SysParamService;
 import com.una.uc.service.UserInfoService;
 import com.una.uc.service.UserService;
+import com.una.uc.util.CommonUtil;
+import com.una.uc.util.ZXingUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +60,17 @@ public class JunitTest {
         for (User user: users){
             SysParam sysParam = new SysParam(new Date(), user);
             sysParamService.addOrUpdate(sysParam);
+        }
+        System.out.println("---------------- 测试结束 ----------------------");
+    }
+
+    @Test
+    public void userInfoNameUpdateTest()  {
+        System.out.println("---------------- 测试开始 ----------------------");
+        List<UserInfo> userInfos = userInfoService.list();
+        for (UserInfo userInfo: userInfos){
+            userInfo.setName(userInfo.getUser().getName());
+            userInfoService.addOrUpdate(userInfo);
         }
         System.out.println("---------------- 测试结束 ----------------------");
     }

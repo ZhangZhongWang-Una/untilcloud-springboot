@@ -165,4 +165,7 @@ public class SchoolInstitutionService {
         return sInstitutions;
     }
 
+    public List<SchoolInstitution> getSchool(int pid) {
+        return schoolInstitutionDAO.findAllByParentId(pid);
+    }
 }

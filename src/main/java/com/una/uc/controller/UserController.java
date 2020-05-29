@@ -33,6 +33,7 @@ public class UserController{
     @Autowired
     UserInfoService userInfoService;
 
+
     /** -------------------------- 用户 -------------------------------------- **/
 
     @PostMapping(value = "/api/admin/user/add")
@@ -128,6 +129,7 @@ public class UserController{
 
     /** -------------------------- 用户信息 -------------------------------------- **/
 
+
     @GetMapping(value = "/api/userInfo")
     public Result getCurrentUserInfo() {
         log.info("---------------- 获取当前用户信息 ----------------------");
@@ -154,23 +156,4 @@ public class UserController{
         else
             return ResultFactory.buildFailResult(message);
     }
-
-//    @PostMapping(value = "/api/userInfo/test")
-//    public Result test(MultipartFile file) throws Exception {
-//        log.info("---------------- 测试 ----------------------");
-//        String folder = "E:/img";
-//        File imageFolder = new File(folder);
-//        File f = new File(imageFolder, CommonUtil.creatUUID() + file.getOriginalFilename()
-//                .substring(file.getOriginalFilename().length() - 4));
-//        if (!f.getParentFile().exists())
-//            f.getParentFile().mkdirs();
-//        try {
-//            file.transferTo(f);
-//            String imgURL = "http://localhost:8443/api/file/" + f.getName();
-//            return ResultFactory.buildSuccessResult(imgURL);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResultFactory.buildFailResult("");
-//        }
-//    }
 }

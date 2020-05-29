@@ -74,13 +74,12 @@ public class UserInfo {
     /**
      * 真实姓名
      */
-    @Transient
     private String name;
 
     public UserInfo() {}
 
     public UserInfo(int id, String username, String nickname, String ino, String sex,
-                    String school, String college, String cover) {
+                    String school, String college, String cover,String name) {
         this.id = id;
         this.username = username;
         this.nickname = nickname;
@@ -89,12 +88,14 @@ public class UserInfo {
         this.school = school;
         this.college = college;
         this.cover = cover;
+        this.name = name;
     }
 
     public UserInfo(String username,User user) {
         this.username = username;
         this.cover = "default.jpg";
         this.user = user;
+        this.name = user.getName();
     }
 
     public int getId() {

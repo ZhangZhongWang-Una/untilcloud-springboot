@@ -11,9 +11,22 @@ public enum Constant {
     SMS_Verification_Code(801),
 
     //文件
-    //FILE_Photo_Base_Url("http://localhost:8443/api/file/"),
-    FILE_Photo_Base_Url("http://47.98.142.113:8443/api/file/"),
-    FILE_Photo_Path("C:/img");
+    FILE_Url_Course("http://47.98.142.113:8443/api/file/Course/"),
+    FILE_Url_User("http://47.98.142.113:8443/api/file/User/"),
+    FILE_Url_QrCode("http://47.98.142.113:8443/api/file/QrCode/"),
+    FILE_Url_Base("http://47.98.142.113:8443/api/file/"),
+    FILE_Photo_User("C:/img/User/"),
+    FILE_Photo_Course("C:/img/Course/"),
+    FILE_QrCode("C:/img/QrCode/"),
+
+    //签到
+    SIGNUP_Mode_Gesture("gesture"),
+    SIGNUP_Mode_Time("time"),
+
+    //系统参数
+    Sys_Param_Experience(2),
+    Sys_Param_distance(100);
+
 
     public int code;
     public String string;
