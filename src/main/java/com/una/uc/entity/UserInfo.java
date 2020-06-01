@@ -59,6 +59,18 @@ public class UserInfo {
     private String cover;
 
     /**
+     * 学校id
+     */
+    @Column(name = "school_id")
+    private int schoolId;
+
+    /**
+     * 学院id
+     */
+    @Column(name = "college_id")
+    private int collegeId;
+
+    /**
      * 用户ID
      */
     @ManyToOne()
@@ -79,7 +91,8 @@ public class UserInfo {
     public UserInfo() {}
 
     public UserInfo(int id, String username, String nickname, String ino, String sex,
-                    String school, String college, String cover,String name) {
+                    String school, String college, String cover,String name, String major,
+                    int schoolId, int collegeId) {
         this.id = id;
         this.username = username;
         this.nickname = nickname;
@@ -89,6 +102,9 @@ public class UserInfo {
         this.college = college;
         this.cover = cover;
         this.name = name;
+        this.major = major;
+        this.schoolId = schoolId;
+        this.collegeId = collegeId;
     }
 
     public UserInfo(String username,User user) {
@@ -192,5 +208,21 @@ public class UserInfo {
 
     public void setMajor(String major) {
         this.major = major;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(int collegeId) {
+        this.collegeId = collegeId;
     }
 }

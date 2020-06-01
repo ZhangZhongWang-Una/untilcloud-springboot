@@ -12,7 +12,7 @@ public interface UserInfoDAO extends JpaRepository<UserInfo,Integer> {
     UserInfo findById(int id);
 
     @Query("select new UserInfo(i.id, i.username, i.nickname, i.ino, " +
-            " i.sex, i.school, i.college, i.cover, i.name) from UserInfo i where i.user.id = ?1 ")
+            " i.sex, i.school, i.college, i.cover, i.name, i.major, i.schoolId, i.collegeId) from UserInfo i where i.user.id = ?1 ")
     UserInfo findByUserId(int id);
 
     @Query("from UserInfo i where i.user.id = ?1 ")

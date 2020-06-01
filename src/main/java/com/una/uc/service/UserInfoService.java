@@ -65,6 +65,8 @@ public class UserInfoService {
                 userInfoInDB.setCollege(userInfo.getCollege());
                 userInfoInDB.setMajor(userInfo.getMajor());
                 userInfoInDB.setName(userInfo.getName());
+                userInfoInDB.setSchoolId(userInfo.getSchoolId());
+                userInfoInDB.setCollegeId(userInfo.getCollegeId());
                 addOrUpdate(userInfoInDB);
 
                 //修改角色
