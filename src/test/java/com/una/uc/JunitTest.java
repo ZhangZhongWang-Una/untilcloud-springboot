@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -72,6 +73,18 @@ public class JunitTest {
             userInfo.setName(userInfo.getUser().getName());
             userInfoService.addOrUpdate(userInfo);
         }
+        System.out.println("---------------- 测试结束 ----------------------");
+    }
+
+    @Test
+    public void createQrcodeTest() throws Exception {
+        System.out.println("---------------- 测试开始 ----------------------");
+        File file = new File("C:\\Img\\Course\\32ec6413acb74d3e9f7a5f2474c42e5e.jpg");
+        InputStream logo =  new FileInputStream(file);
+        String qrcode = "05f2fe39d3d4465282b10ecac1a5d15b.jpg";
+        String imagePath = Constant.FILE_QrCode.string +  qrcode;
+        String content = String.valueOf(100002);
+        ZXingUtil.encodeimage(imagePath, "JPEG", content, 430, 430 , logo);
         System.out.println("---------------- 测试结束 ----------------------");
     }
 }

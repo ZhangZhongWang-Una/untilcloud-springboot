@@ -13,4 +13,6 @@ public interface CourseDAO extends JpaRepository<Course,Integer> {
     Course findById(int id);
 
     List<Course> findAllByCreator(int id);
+
+    List<Course> findAllByNameLikeAndTeacherLikeAndGradeLikeAndSemesterLikeOrderBySemesterAsc(String k1, String k2, String k3, String k4);
 }

@@ -54,7 +54,7 @@ public class ShiroConfiguration {
         // 3.公共请求
         filterChainDefinitionMap.put("/common/**", "anon");
         // filterChainDefinitionMap.put("/api/menu", "authc");
-        filterChainDefinitionMap.put("/api/file/**", "authc");
+        filterChainDefinitionMap.put("/api/file/**", "anon");
         filterChainDefinitionMap.put("/api/userInfo/**", "authc");
         filterChainDefinitionMap.put("/api/sys/**", "url");
         filterChainDefinitionMap.put("/api/admin/**", "url");

@@ -131,7 +131,7 @@ public class DicControllor {
         return ResultFactory.buildSuccessResult(dis);
     }
 
-    @GetMapping("/api/sys/dic/get/{TypeCode}")
+    @GetMapping("/api/userInfo/get/{TypeCode}")
     public Result getAllByTypeCode(@PathVariable("TypeCode") int typeCode) {
         log.info("---------------- 获取字典键值对 ----------------------");
         List<Map<String, String>> kv = dictionaryInfoService.findAllByTypeCode(typeCode);

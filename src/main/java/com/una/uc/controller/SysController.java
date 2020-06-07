@@ -106,14 +106,14 @@ public class SysController {
         return ResultFactory.buildSuccessResult(schoolInstitutions);
     }
 
-    @GetMapping("/api/sys/school/get")
+    @GetMapping("/api/userInfo/school/get")
     public Result getSchool() {
         log.info("---------------- 获取学校级别 ----------------------");
         List<SchoolInstitution> schoolInstitutions= schoolInstitutionService.getSchool(0);
         return ResultFactory.buildSuccessResult(schoolInstitutions);
     }
 
-    @GetMapping("/api/sys/school/get/{parentId}")
+    @GetMapping("/api/userInfo/school/get/{parentId}")
     public Result getCollegeAndMajor(@PathVariable("parentId") int parentId) {
         log.info("---------------- 获取院校系 ----------------------");
         List<SchoolInstitution> schoolInstitutions= schoolInstitutionService.getSchool(parentId);

@@ -42,7 +42,7 @@ public class UserInfoService {
         User loginUser = userService.getCurrentUser();
         UserInfo loginUserInfo = userInfoDAO.findByUserId(loginUser.getId());
         loginUserInfo.setRoles(loginUser.getRoles());
-        loginUserInfo.setCover(Constant.FILE_Url_User + loginUserInfo.getCover());
+        loginUserInfo.setCover(Constant.FILE_Url_User.string + loginUserInfo.getCover());
 
         return loginUserInfo;
     }
@@ -87,7 +87,7 @@ public class UserInfoService {
                 .substring(file.getOriginalFilename().length() - 4));
         try {
             file.transferTo(f);
-            String imgURL = Constant.FILE_Url_User+ f.getName();
+            String imgURL = Constant.FILE_Url_User.string+ f.getName();
 
             int uid = userService.getCurrentUser().getId();
             UserInfo userInfoInDB = userInfoDAO.findAllByUserId(uid);
