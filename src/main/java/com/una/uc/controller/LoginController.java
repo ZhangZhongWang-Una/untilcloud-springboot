@@ -6,6 +6,7 @@ import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
 import com.una.uc.realm.LoginType;
 import com.una.uc.realm.UserToken;
+import com.una.uc.service.AdminRoleService;
 import com.una.uc.service.UserService;
 import com.una.uc.util.RedisUtil;
 import com.una.uc.util.CommonUtil;
@@ -30,6 +31,8 @@ public class LoginController {
     UserService userService;
     @Resource
     private RedisUtil redisUtil;
+    @Autowired
+    AdminRoleService adminRoleService;
 
     @GetMapping(value = "/api/common/login")
     public Result login(@RequestParam String account, @RequestParam String password,@RequestParam boolean rememberMe) {
@@ -40,6 +43,7 @@ public class LoginController {
         try {
             subject.login(token);
             token.setPassword(null);
+            token.setRoles(adminRoleService.listRolesByUser(account));
             return ResultFactory.buildSuccessResult(token);
         } catch (AuthenticationException e) {
             String message = "账号或密码错误";
@@ -56,6 +60,8 @@ public class LoginController {
         token.setRememberMe(rememberMe);
         try {
             subject.login(token);
+            token.setPassword(null);
+            token.setRoles(adminRoleService.listRolesByUser(phone));
             return ResultFactory.buildSuccessResult(token);
         } catch (AuthenticationException e) {
             String message = "账号或密码错误";
@@ -88,6 +94,11 @@ public class LoginController {
         if (null == subject) {
             String message = "当前无账号登陆，登出失败";
             return ResultFactory.buildFailResult(message);
+        } else if (null == subject.getPrincipal()) {
+            subject.logout();
+            log.info("---------------- 账号： 成功登出 ----------------------");
+            String message = "成功登出";
+            return ResultFactory.buildSuccessResult(message);
         }
         String account = SecurityUtils.getSubject().getPrincipal().toString();
         subject.logout();

@@ -49,7 +49,7 @@ public class CourseController {
         log.info("---------------- 添加课程 ----------------------");
         MultipartHttpServletRequest params=((MultipartHttpServletRequest) request);
         List<MultipartFile> files = ((MultipartHttpServletRequest) request)
-                .getFiles("file");
+                .getFiles("cover");
         Course course = new Course();
         course.setName(params.getParameter("name"));
         course.setGrade(params.getParameter("grade"));
@@ -74,7 +74,7 @@ public class CourseController {
         log.info("---------------- 修改课程包含头像 ----------------------");
         MultipartHttpServletRequest params=((MultipartHttpServletRequest) request);
         List<MultipartFile> files = ((MultipartHttpServletRequest) request)
-                .getFiles("file");
+                .getFiles("cover");
         Course course = new Course();
         course.setId(Integer.parseInt(params.getParameter("id")));
         course.setName(params.getParameter("name"));
@@ -87,8 +87,12 @@ public class CourseController {
         course.setLearnRequire(params.getParameter("learnRequire"));
         course.setTeachProgress(params.getParameter("teachProgress"));
         course.setExamArrange(params.getParameter("examArrange"));
-
-        String message = courseService.editContainCover(course, files.get(0));
+        String message = "";
+        if(0 == files.size()) {
+            message = courseService.editContainCover(course, null);
+        } else {
+            message = courseService.editContainCover(course, files.get(0));
+        }
         if ("参数异常，修改失败".equals(message))
             return ResultFactory.buildFailResult(message);
         else

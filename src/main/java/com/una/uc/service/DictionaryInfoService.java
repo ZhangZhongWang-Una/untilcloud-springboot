@@ -22,6 +22,7 @@ public class DictionaryInfoService {
     DictionaryTypeService dictionaryTypeService;
 
     public void addOrUpdate(DictionaryInfo dictionaryInfo) {
+        dictionaryInfo.setUpdateTime(new Date());
         dictionaryInfoDAO.save(dictionaryInfo);
     }
 

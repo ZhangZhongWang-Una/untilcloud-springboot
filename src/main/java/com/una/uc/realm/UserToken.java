@@ -1,6 +1,9 @@
 package com.una.uc.realm;
 
+import com.una.uc.entity.AdminRole;
 import org.apache.shiro.authc.UsernamePasswordToken;
+
+import java.util.List;
 
 /**
  * @author Una
@@ -10,6 +13,8 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 public class UserToken extends UsernamePasswordToken {
     //登录方式
     private LoginType loginType;
+    //角色
+    private List<AdminRole> roles;
 
     public UserToken(LoginType loginType, final String username, final String password) {
         super(username, password);
@@ -22,5 +27,13 @@ public class UserToken extends UsernamePasswordToken {
 
     public void setLoginType(LoginType loginType) {
         this.loginType = loginType;
+    }
+
+    public List<AdminRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<AdminRole> roles) {
+        this.roles = roles;
     }
 }

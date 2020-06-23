@@ -110,6 +110,8 @@ public class UserInfo {
     public UserInfo(String username,User user) {
         this.username = username;
         this.cover = "default.jpg";
+        this.schoolId = -1;
+        this.collegeId = -1;
         this.user = user;
         this.name = user.getName();
     }
