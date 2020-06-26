@@ -73,16 +73,18 @@ public class CourseService {
         String message = "";
         try{
             Course courseInDB = courseDAO.findById(course.getId());
-            course.setName(course.getName());
-            course.setGrade(course.getGrade());
-            course.setSemester(course.getSemester());
-            course.setSchool(course.getSchool());
-            course.setCollege(course.getCollege());
-            course.setMajor(course.getMajor());
-            course.setTeacher(course.getTeacher());
-            course.setLearnRequire(course.getLearnRequire());
-            course.setTeachProgress(course.getTeachProgress());
-            course.setExamArrange(course.getExamArrange());
+            courseInDB.setName(course.getName());
+            courseInDB.setGrade(course.getGrade());
+            courseInDB.setSemester(course.getSemester());
+            courseInDB.setSchool(course.getSchool());
+            courseInDB.setCollege(course.getCollege());
+            courseInDB.setMajor(course.getMajor());
+            courseInDB.setTeacher(course.getTeacher());
+            courseInDB.setLearnRequire(course.getLearnRequire());
+            courseInDB.setTeachProgress(course.getTeachProgress());
+            courseInDB.setExamArrange(course.getExamArrange());
+            courseInDB.setSchoolId(course.getSchoolId());
+            courseInDB.setCollegeId(course.getCollegeId());
             addOrUpdate(courseInDB);
             message = "修改成功";
         } catch (Exception e) {
@@ -107,6 +109,8 @@ public class CourseService {
             courseInDB.setLearnRequire(course.getLearnRequire());
             courseInDB.setTeachProgress(course.getTeachProgress());
             courseInDB.setExamArrange(course.getExamArrange());
+            courseInDB.setSchoolId(course.getSchoolId());
+            courseInDB.setCollegeId(course.getCollegeId());
             if (null != file) {
                 File imageFolder = new File(Constant.FILE_Photo_Course.string);
                 File f = new File(imageFolder, CommonUtil.creatUUID() + file.getOriginalFilename()

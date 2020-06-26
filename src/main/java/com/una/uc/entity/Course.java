@@ -96,6 +96,18 @@ public class Course {
      */
     private int creator;
 
+    /**
+     * 学校id
+     */
+    @Column(name = "school_id")
+    private int schoolId;
+
+    /**
+     * 学院id
+     */
+    @Column(name = "college_id")
+    private int collegeId;
+
     public int getId() {
         return id;
     }
@@ -214,5 +226,21 @@ public class Course {
 
     public void setCreator(int creator) {
         this.creator = creator;
+    }
+
+    public int getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(int schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public int getCollegeId() {
+        return collegeId;
+    }
+
+    public void setCollegeId(int collegeId) {
+        this.collegeId = collegeId;
     }
 }
