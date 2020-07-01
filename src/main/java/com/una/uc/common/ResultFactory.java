@@ -2,11 +2,11 @@ package com.una.uc.common;
 
 public class ResultFactory {
     public static Result buildSuccessResult(Object data) {
-        return buildResult(Constant.SUCCESS, "成功", data);
+        return buildResult(Constant.SUCCESS.code, "成功", data);
     }
 
     public static Result buildFailResult(String message) {
-        return buildResult(Constant.FAIL, message, null);
+        return buildResult(Constant.FAIL.code, message, null);
     }
 
     public static Result buildResult(Constant constant, String message, Object data) {

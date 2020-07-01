@@ -7,8 +7,15 @@ public enum Constant {
     UNAUTHORIZED(401),
     NOT_FOUND(404),
     INTERNAL_SERVER_ERROR(500),
-    // 短信验证码
+    //签到
+    SIGNUP_REPEAT(701),
+    SIGNUP_OUT_RANGE(702),
+    SIGNUP_VALUE_ERROR(703),
+    //短信验证码
     SMS_Verification_Code(801),
+    //系统参数
+    Sys_Param_Experience(2),
+    Sys_Param_distance(100),
 
     //文件
     FILE_Url_Course("http://47.98.142.113:8443/api/file/Course/"),
@@ -21,11 +28,7 @@ public enum Constant {
 
     //签到
     SIGNUP_Mode_Gesture("gesture"),
-    SIGNUP_Mode_Time("time"),
-
-    //系统参数
-    Sys_Param_Experience(2),
-    Sys_Param_distance(100);
+    SIGNUP_Mode_Time("time");
 
 
     public int code;

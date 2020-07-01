@@ -1,6 +1,7 @@
 package com.una.uc.controller;
 
 
+import com.una.uc.common.Constant;
 import com.una.uc.common.Result;
 import com.una.uc.common.ResultFactory;
 import com.una.uc.entity.Course;
@@ -61,6 +62,8 @@ public class CourseController {
         course.setLearnRequire(params.getParameter("learnRequire"));
         course.setTeachProgress(params.getParameter("teachProgress"));
         course.setExamArrange(params.getParameter("examArrange"));
+        course.setSchoolId(Integer.parseInt(params.getParameter("schoolId")));
+        course.setCollegeId(Integer.parseInt(params.getParameter("collegeId")));
 
         String message = courseService.add(course, files.get(0));
         if ("参数异常，添加失败".equals(message))
@@ -250,8 +253,15 @@ public class CourseController {
         String message= studentSignInService.add(studentSignIn);
         if ("签到成功".equals(message))
             return ResultFactory.buildSuccessResult(message);
-        else
+        else if ("请勿重复签到！".equals(message)) {
+            return ResultFactory.buildResult(Constant.SIGNUP_REPEAT, message, null);
+        }else if ("超出签到范围".equals(message)) {
+            return ResultFactory.buildResult(Constant.SIGNUP_OUT_RANGE, message, null);
+        }else if ("参数异常，签到失败".equals(message)) {
             return ResultFactory.buildFailResult(message);
+        }else {
+            return ResultFactory.buildResult(Constant.SIGNUP_VALUE_ERROR, message, null);
+        }
     }
 
     @GetMapping("/api/class/stu/signIn/all")

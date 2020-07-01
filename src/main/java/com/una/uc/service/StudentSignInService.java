@@ -40,6 +40,7 @@ public class StudentSignInService {
         else
             return true;
     }
+
     public String add(StudentSignIn studentSignIn) {
         String message = "";
         int uid = userService.getCurrentUserId();
@@ -51,29 +52,33 @@ public class StudentSignInService {
                 GlobalCoordinates source = new GlobalCoordinates(Double.parseDouble(studentSignIn.getLatitude()), Double.parseDouble(studentSignIn.getLongitude()));
                 GlobalCoordinates target = new GlobalCoordinates(Double.parseDouble(studentSignIn.getCourseSignIn().getLatitude()), Double.parseDouble(studentSignIn.getCourseSignIn().getLongitude()));
                 double dist = CommonUtil.getDistanceMeter(source, target, Ellipsoid.Sphere);
-                if (dist < Constant.Sys_Param_distance.code){
+                if (dist >= Constant.Sys_Param_distance.code){
+                    message = "超出签到范围";
+                } else if (studentSignIn.getTime().after(studentSignIn.getCourseSignIn().getEndTime())) {
+                    message = "超过时间";
+                } else {
                     addOrUpdate(studentSignIn);
                     courseStudentService.addExperience(studentSignIn.getCourseSignIn().getCourse().getId(), uid);
                     message = "签到成功";
-                } else {
-                    message = "签到失败";
                 }
             } else if (Constant.SIGNUP_Mode_Gesture.string.equals(studentSignIn.getMode())) {
                 GlobalCoordinates source = new GlobalCoordinates(Double.parseDouble(studentSignIn.getLatitude()), Double.parseDouble(studentSignIn.getLongitude()));
                 GlobalCoordinates target = new GlobalCoordinates(Double.parseDouble(studentSignIn.getCourseSignIn().getLatitude()), Double.parseDouble(studentSignIn.getCourseSignIn().getLongitude()));
                 double dist = CommonUtil.getDistanceMeter(source, target, Ellipsoid.Sphere);
-                if (dist < Constant.Sys_Param_distance.code && studentSignIn.getValue().equals(studentSignIn.getCourseSignIn().getValue())){
+                if (dist >= Constant.Sys_Param_distance.code){
+                    message = "超出签到范围";
+                } else if (!studentSignIn.getValue().equals(studentSignIn.getCourseSignIn().getValue())) {
+                    message = "手势错误";
+                } else {
                     addOrUpdate(studentSignIn);
                     courseStudentService.addExperience(studentSignIn.getCourseSignIn().getCourse().getId(), uid);
                     message = "签到成功";
-                } else {
-                    message = "签到失败";
                 }
             } else {
-                message = "签到失败";
+                message = "参数异常，签到失败";
             }
         } catch (Exception e) {
-            message = "参数异常，添加失败";
+            message = "参数异常，签到失败";
             e.printStackTrace();
         }
         return message;
