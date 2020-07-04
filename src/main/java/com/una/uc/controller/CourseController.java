@@ -168,7 +168,7 @@ public class CourseController {
         return ResultFactory.buildSuccessResult(courses);
     }
 
-    @GetMapping("/api/class/course/get/{cid}")
+    @GetMapping("/api/class/stu/course/get/{cid}")
     public Result getById(@PathVariable("cid") int cid) {
         log.info("---------------- 获取单一课程 ----------------------");
         Course course= courseService.findById(cid);
@@ -270,4 +270,12 @@ public class CourseController {
         List<Map<String, Object>> maps = studentSignInService.getAllSignInByUserId(userService.getCurrentUserId(), cid);
         return ResultFactory.buildSuccessResult(maps);
     }
+
+    @GetMapping("/api/class/signIn/stu")
+    public Result getAllSignInStudentByCourseSignIn(@RequestParam int csiid) {
+        log.info("---------------- 课程签到的学生 ----------------------");
+        List<Map<String, Object>> maps = studentSignInService.getAllSignInByCourseSignIn(csiid);
+        return ResultFactory.buildSuccessResult(maps);
+    }
+
 }

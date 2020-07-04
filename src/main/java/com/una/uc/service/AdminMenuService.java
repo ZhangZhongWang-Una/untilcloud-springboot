@@ -1,16 +1,12 @@
 package com.una.uc.service;
 
 import com.una.uc.dao.AdminMenuDAO;
-import com.una.uc.entity.AdminMenu;
-import com.una.uc.entity.AdminRoleMenu;
-import com.una.uc.entity.AdminUserRole;
-import com.una.uc.entity.User;
+import com.una.uc.entity.*;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -56,38 +52,60 @@ public class AdminMenuService {
                 }
             }
         }
-        handleMenus(menus);
-        return menus;
+        return handleMenus(menus);
     }
 
     public List<AdminMenu> getMenusByRoleId(int rid) {
         List<AdminMenu> menus = new ArrayList<>();
         List<AdminRoleMenu> rms = adminRoleMenuService.findAllByRid(rid);
         for (AdminRoleMenu rm : rms) {
-            menus.add(adminMenuDAO.findById(rm.getMid()));
+            AdminMenu menu =adminMenuDAO.findById(rm.getMid());
+            menu.setChildren(null);
+            menus.add(menu);
         }
-        handleMenus(menus);
-        return menus;
+        return handleMenus(menus);
+
     }
-
-    public void handleMenus(List<AdminMenu> menus) {
-        for (AdminMenu menu : menus) {
-            menu.setChildren(getAllByParentId(menu.getId()));
-        }
-
-        Iterator<AdminMenu> iterator = menus.iterator();
-        while (iterator.hasNext()) {
-            AdminMenu menu = iterator.next();
-            if (menu.getParentId() != 0) {
-                iterator.remove();
+    public List<AdminMenu> handleMenus(List<AdminMenu>menus) {
+        List<AdminMenu> deleteMenus = new ArrayList<>();
+        for (AdminMenu menu: menus){
+            for (AdminMenu menu2: menus) {
+                if (menu.getId() == menu2.getParentId()) {
+                    if (null == menu.getChildren()) {
+                        List<AdminMenu> children = new ArrayList<>();
+                        children.add(menu2);
+                        menu.setChildren(children);
+                        deleteMenus.add(menu2);
+                    } else {
+                        menu.getChildren().add(menu2);
+                        deleteMenus.add(menu2);
+                    }
+                }
             }
         }
+        for (AdminMenu menu: deleteMenus) {
+            menus.remove(menu);
+        }
+        return menus;
     }
+//    public void handleMenus(List<AdminMenu> menus) {
+//        for (AdminMenu menu : menus) {
+//            menu.setChildren(getAllByParentId(menu.getId()));
+//        }
+//
+//        Iterator<AdminMenu> iterator = menus.iterator();
+//        while (iterator.hasNext()) {
+//            AdminMenu menu = iterator.next();
+//            if (menu.getParentId() != 0) {
+//                iterator.remove();
+//            }
+//        }
+//    }
+
 
     public List<AdminMenu> list() {
         List<AdminMenu> menus = adminMenuDAO.findAll();
-        handleMenus(menus);
-        return menus;
+        return handleMenus(menus);
     }
     public String add(AdminMenu adminMenu){
         String message = "";
@@ -169,7 +187,6 @@ public class AdminMenuService {
 
     public List<AdminMenu> all() {
         List<AdminMenu> menus = adminMenuDAO.findAllOrderByParentId();
-        handleMenus(menus);
-        return menus;
+        return handleMenus(menus);
     }
 }

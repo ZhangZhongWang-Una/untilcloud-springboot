@@ -30,25 +30,48 @@ public class AdminPermissionService {
 
     public List<AdminPermission> list() {
         List<AdminPermission> ps = adminPermissionDAO.findAll();
-        handlePerms(ps);
-        return ps;
+        return handlePerms(ps);
+
     }
 
     public List<AdminPermission> getAllByParentId(int parentId) {
         return adminPermissionDAO.findAllByParentId(parentId);}
 
-    public void handlePerms(List<AdminPermission>perms) {
-        for (AdminPermission perm : perms) {
-            perm.setChildren(getAllByParentId(perm.getId()));
-        }
+//    public void handlePerms(List<AdminPermission>perms) {
+//        for (AdminPermission perm : perms) {
+//            perm.setChildren(getAllByParentId(perm.getId()));
+//        }
+//
+//        Iterator<AdminPermission> iterator = perms.iterator();
+//        while (iterator.hasNext()) {
+//            AdminPermission perm = iterator.next();
+//            if (perm.getParentId() != 0) {
+//                iterator.remove();
+//            }
+//        }
+//    }
 
-        Iterator<AdminPermission> iterator = perms.iterator();
-        while (iterator.hasNext()) {
-            AdminPermission perm = iterator.next();
-            if (perm.getParentId() != 0) {
-                iterator.remove();
+    public List<AdminPermission> handlePerms(List<AdminPermission>perms) {
+        List<AdminPermission> deletePerms = new ArrayList<>();
+        for (AdminPermission perm: perms){
+            for (AdminPermission perm2: perms) {
+                if (perm.getId() == perm2.getParentId()) {
+                    if (null == perm.getChildren()) {
+                        List<AdminPermission> children = new ArrayList<>();
+                        children.add(perm2);
+                        perm.setChildren(children);
+                        deletePerms.add(perm2);
+                    } else {
+                        perm.getChildren().add(perm2);
+                        deletePerms.add(perm2);
+                    }
+                }
             }
         }
+        for (AdminPermission perm: deletePerms) {
+            perms.remove(perm);
+        }
+        return perms;
     }
 
     public boolean needFilter(String requestAPI) {
@@ -66,10 +89,11 @@ public class AdminPermissionService {
         List<AdminRolePermission> rps = adminRolePermissionService.findAllByRid(rid);
         List<AdminPermission> perms = new ArrayList<>();
         for (AdminRolePermission rp : rps) {
-            perms.add(adminPermissionDAO.findById(rp.getPid()));
+            AdminPermission perm =adminPermissionDAO.findById(rp.getPid());
+            perm.setChildren(null);
+            perms.add(perm);
         }
-        handlePerms(perms);
-        return perms;
+        return handlePerms(perms);
     }
 
     public Set<String> listPermissionURLsByUser(String account) {

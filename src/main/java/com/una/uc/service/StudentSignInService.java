@@ -10,6 +10,7 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -26,6 +27,7 @@ public class StudentSignInService {
     CourseStudentService courseStudentService;
     @Autowired
     CourseSignInService courseSignInService;
+    private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public void addOrUpdate(StudentSignIn studentSignIn){
         studentSignIn.setStudent(userService.getCurrentUserId());
@@ -91,7 +93,7 @@ public class StudentSignInService {
         for (CourseSignIn courseSignIn: courseSignIns){
             Map<String,Object> map = new HashMap<>();
             map.put("csiid",courseSignIn.getId());
-            map.put("time",courseSignIn.getStartTime().toString());
+            map.put("time",sdf.format(courseSignIn.getStartTime()));
             map.put("mode",courseSignIn.getMode());
             map.put("isSignIn",false);
             for (StudentSignIn studentSignIn: studentSignIns){
@@ -104,5 +106,20 @@ public class StudentSignInService {
 
         }
         return maps;
+    }
+
+    public List<Map<String,Object>> getAllSignInByCourseSignIn(int csiid){
+        List<Map<String,Object>> maps = studentSignInDAO.findAllByCourseSignIn(csiid);
+        List<Map<String,Object>> result = new ArrayList<>();
+        for (Map<String,Object> map: maps){
+            Map<String,Object> tmp = new HashMap<>();
+            tmp.put("ino",map.get("ino"));
+            tmp.put("name",map.get("name"));
+            tmp.put("time",sdf.format(map.get("time")));
+            tmp.put("mode",map.get("mode"));
+            result.add(tmp);
+        }
+
+        return result;
     }
 }
