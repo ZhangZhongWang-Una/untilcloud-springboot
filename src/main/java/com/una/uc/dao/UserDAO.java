@@ -34,5 +34,5 @@ public interface UserDAO extends JpaRepository<User,Integer> {
     @Query("update User as u set u.password = ?2 , u.salt = ?3 where u.phone=?1")
     int updatePasswordAndSaltByPhone(String phone, String encodedPassword, String salt);
 
-    List<User> findAllByUsernameLikeOrNameLike(String keyword1, String keyword2);
+    List<User> findAllByUsernameLikeOrNameLikeOrPhoneLikeOrEmailLike(String keyword1, String keyword2, String keyword3, String keyword4);
 }

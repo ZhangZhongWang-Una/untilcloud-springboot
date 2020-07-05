@@ -236,7 +236,8 @@ public class UserService {
     }
 
     public List<User> search(String keywords) {
-        List<User> us = userDAO.findAllByUsernameLikeOrNameLike('%' + keywords + '%', '%' + keywords + '%');
+        List<User> us = userDAO.findAllByUsernameLikeOrNameLikeOrPhoneLikeOrEmailLike(
+                '%' + keywords + '%', '%' + keywords + '%', '%' + keywords + '%', '%' + keywords + '%');
         List<AdminRole> roles;
         for (User u : us) {
             u.setPassword("");

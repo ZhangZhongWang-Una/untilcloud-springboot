@@ -85,6 +85,15 @@ public class SysParamService {
         return sysParams;
     }
 
+    public SysParam getByUserId(int uid){
+        SysParam sysParam = sysParamDAO.findByUserId(uid);
+        List<AdminRole> roles = adminRoleService.listRolesByUser(uid);
+        User user = new User(uid,sysParam.getUserUsername(),
+                sysParam.getUserName(),sysParam.getUserEnabled(),roles);
+        sysParam.setUser(user);
+        return sysParam;
+    }
+
 //    public String delete(int spid) {
 //        String message = "";
 //        try {

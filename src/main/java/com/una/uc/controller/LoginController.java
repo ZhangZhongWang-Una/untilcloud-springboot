@@ -1,5 +1,6 @@
 package com.una.uc.controller;
 
+import com.una.uc.api.TencentAPI;
 import com.una.uc.common.Constant;
 import com.una.uc.entity.User;
 import com.una.uc.common.Result;
@@ -124,8 +125,9 @@ public class LoginController {
         if (true == isSuccess) {
             log.info("---------------- " + phone +" 验证码成功存入redis ----------------------");
             //3.发送短信
-            //String isSend = TencentAPI.sendSms(phone, code);
-            return ResultFactory.buildSuccessResult(verificationCode);
+            String isSend = TencentAPI.sendSms(phone, verificationCode);
+            return ResultFactory.buildSuccessResult(isSend);
+
         } else {
             String message = "失败";
             return ResultFactory.buildFailResult(message);

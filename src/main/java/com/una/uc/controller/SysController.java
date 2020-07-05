@@ -6,6 +6,7 @@ import com.una.uc.entity.SchoolInstitution;
 import com.una.uc.entity.SysParam;
 import com.una.uc.service.SchoolInstitutionService;
 import com.una.uc.service.SysParamService;
+import com.una.uc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ public class SysController {
     SysParamService sysParamService;
     @Autowired
     SchoolInstitutionService schoolInstitutionService;
+    @Autowired
+    UserService userService;
 
     /** -------------------------- 系统参数 -------------------------------------- **/
 
@@ -53,6 +56,14 @@ public class SysController {
         List<SysParam> sysParams= sysParamService.search(keywords);
         return ResultFactory.buildSuccessResult(sysParams);
     }
+
+    @GetMapping(value = "/api/sys/param/get")
+    public Result getSysParamByLoginUser() {
+        log.info("---------------- 获取登陆用户的系统参数 ----------------------");
+        SysParam sysParam = sysParamService.getByUserId(userService.getCurrentUserId());
+        return ResultFactory.buildSuccessResult(sysParam);
+    }
+
 
     /** -------------------------- 学校机构 -------------------------------------- **/
 
